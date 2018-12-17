@@ -214,11 +214,13 @@ int PontosVenda::load_file(string ficheiro){
 					if(tipo == "normal"){
 
 						string nome;
+						int numDias;
 
 						f >> nome; //extrai o nome do utente
 						nome = replaceUnderscoresWithSpaces(nome);
+						f >> numDias; //extrai o numero de dias ate ficar inativo
 
-						Utente* u = new Utente(nome); //cria um novo utente normal
+						Utente* u = new Utente(nome, numDias); //cria um novo utente normal
 
 						BilheteAssinatura b3(categoria, preco, tipo, u); //cria um bilhete, associado a esse utente
 						l->addBilheteA(b3);
@@ -230,13 +232,14 @@ int PontosVenda::load_file(string ficheiro){
 					else if(tipo == "junior"){
 
 						string nome, cc;
+						int numDias;
 						int idade;
 
-						f >> nome >> idade >> cc; //extrai nome, idade e CC do utente
+						f >> nome >> numDias >> idade >> cc; //extrai nome, numero de dias, idade e CC do utente
 
 						nome = replaceUnderscoresWithSpaces(nome);
 
-						Utente* u = new UtenteJunior(nome, idade, cc); //cria um novo utente junior
+						Utente* u = new UtenteJunior(nome, numDias, idade, cc); //cria um novo utente junior
 
 						BilheteAssinatura b4(categoria, preco, tipo, u); //cria um bilhete, associado a esse utente
 						l->addBilheteA(b4);
@@ -248,13 +251,14 @@ int PontosVenda::load_file(string ficheiro){
 					}else if(tipo == "senior"){
 
 						string nome, cc;
+						int numDias;
 						int idade;
 
-						f >> nome >>idade >> cc; //extrai nome, idade e CC do utente
+						f >> nome >> numDias >> idade >> cc; //extrai nome, numero de dias, idade e CC do utente
 
 						nome = replaceUnderscoresWithSpaces(nome);
 
-						Utente* u = new UtenteSenior(nome, idade, cc); //cria um novo utente senior
+						Utente* u = new UtenteSenior(nome, numDias, idade, cc); //cria um novo utente senior
 						BilheteAssinatura b5(categoria, preco, tipo, u); //cria um bilhete, associado a esse utente
 						l->addBilheteA(b5);
 						this->addUtente(u);
@@ -265,14 +269,15 @@ int PontosVenda::load_file(string ficheiro){
 					}else if(tipo == "estudante"){
 
 						string nome, cc, escola;
+						int numDias;
 						int idade;
 
-						f >> nome >> idade >> cc >> escola; //extrai nome, idade, CC e escola do utente
+						f >> nome >> numDias >> idade >> cc >> escola; //extrai nome, numero de dias, idade, CC e escola do utente
 
 						nome = replaceUnderscoresWithSpaces(nome);
 						escola = replaceUnderscoresWithSpaces(escola);
 
-						Utente* u = new UtenteEstudante(nome, idade, cc, escola); //cria um novo utente senior
+						Utente* u = new UtenteEstudante(nome, numDias, idade, cc, escola); //cria um novo utente senior
 						BilheteAssinatura b6(categoria, preco, tipo, u); //cria um bilhete, associado a esse utente
 						l->addBilheteA(b6);
 						this->addUtente(u);
@@ -636,3 +641,60 @@ void PontosVenda::sortPDV(string local, bool crescente){
 
 
 }
+
+
+//----------FUNCIONARIOS------------
+
+
+set<Funcionario> PontosVenda::getFuncionarios() {return funcionarios;}
+
+
+Funcionario PontosVenda::getFuncionario(unsigned int id) const {
+
+	set<Funcionario>::iterator itr = funcionarios.begin();
+	set<Funcionario>::iterator itre = funcionarios.end();
+
+	while(itr != itre){
+		if(itr->getId() == id)
+			return *itr;
+
+		itr++;
+	}
+
+	throw FuncionarioInexistente(id);
+}
+
+
+bool PontosVenda::addFuncionario(Funcionario f){
+	return funcionarios.insert(f).second;
+}
+
+
+//nao terminada
+bool PontosVenda::removeFuncionario(Funcionario f){
+	funcionarios.erase(f);
+	return true;
+}
+
+//----------COMPOSICAO------------
+
+void PontosVenda::imprimeInfoComposicoes() const{
+
+	priority_queue<Composicao> buffer = composicoes;
+
+	if(buffer.empty()){
+		cout << "Nao ha informacao relativa as composicoes!" << endl;
+		return;
+	}
+
+	cout << endl;
+	while(!buffer.empty()){
+
+		Composicao atual = buffer.top();
+		buffer.pop();
+
+		atual.imprimeInfoComp();
+		cout << endl << endl;
+	}
+}
+

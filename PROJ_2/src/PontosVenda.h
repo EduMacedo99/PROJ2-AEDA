@@ -5,9 +5,14 @@
 #include <vector>
 #include <string>
 #include <algorithm>
+#include <set>
+#include <queue>
+#include <unordered_set>
 #include "Maquina.h"
 #include "Bilhete.h"
 #include "Utente.h"
+#include "Funcionario.h"
+#include "Composicao.h"
 
 /**
  * Classe utilizada para englobar toda a informacao referente aos pontos de venda da cidade
@@ -25,6 +30,17 @@ private:
 	 * Vetor com todos os utentes que possuem um bilhete assinatura
 	 */
 	vector<Utente*> utentes;
+
+	/**
+	 * Estrutura com todos os funcionarios do metro
+	 */
+	set<Funcionario> funcionarios;
+
+
+	/**
+	 * Estrutura que tem todas as composicoes de metros na base de dados, e informacao relativa
+	 */
+	priority_queue<Composicao> composicoes;
 
 
 public:
@@ -173,6 +189,44 @@ public:
 	 * @param crescente Indica se a ordem desejada e a ordem crescente ou decrescente do preco dos bilhetes
 	 */
 	void sortPDV(string local, bool crescente);
+
+
+	//----------FUNCIONARIOS------------
+
+	/**
+	 * Funcao que retorna a estrutura com os funcionarios do metro
+	 * @return Set com os funcionarios do metro
+	 */
+	set<Funcionario> getFuncionarios();
+
+	/**
+	 * Funcao que procura o funcionario com o id introduzido no set e lanca uma excecao se nao encontrar
+	 * @param id identificador do funcionario que se procura
+	 * @return Funcionario com o id introduzido
+	 */
+	Funcionario getFuncionario(unsigned int id) const;
+
+	/**
+	 * Funcao que adiciona um funcionario ao set funcionarios
+	 * @param f Funcionario que se pretende adicionar
+	 * @return true se e adicionado com sucesso e false se nao e
+	 */
+	bool addFuncionario(Funcionario f);
+
+	/**
+	 * Funcao que remove um funcionario do set funcionarios
+	 * @param f Funcionario que se pretende remover
+	 * @return true se e removido com sucesso e false se nao e
+	 */
+	bool removeFuncionario(Funcionario f);
+
+
+	//----------COMPOSICAO------------
+
+	/**
+	 * Metodo que imprime toda a informacao relativa as composicoes do metro
+	 */
+	void imprimeInfoComposicoes() const;
 
 };
 

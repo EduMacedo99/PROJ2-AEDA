@@ -1,8 +1,9 @@
 #include <iostream>
 #include "Funcionario.h"
-//FAZER OUTROS INCLUDES
 
 using namespace std;
+
+unsigned int Funcionario::nextIdF = 0;
 
 string Funcionario::getNome() const { return nome;}
 
@@ -12,13 +13,20 @@ string Funcionario::getFuncao() const { return funcao;}
 
 string Funcionario::getPtVenda() const { return pt_venda;}
 
-bool Funcionario::operator<(Funcionario f){
+unsigned int Funcionario::getId() const { return id;}
 
-	if(getSalario() < f.getSalario())
-		return true;
+bool Funcionario::operator<(const Funcionario &f) const{
 
-	else if(getNome() < f.getNome())
-		return true;
+	if(salario == f.getSalario())
+		return nome < f.getNome();
+	else return salario < f.getSalario();
+}
 
-	return false;
+bool Funcionario::operator==(const Funcionario &f) const{
+	return (salario == f.getSalario() && nome == f.getNome());
+}
+
+
+unsigned int FuncionarioInexistente::getId(){
+	return id;
 }

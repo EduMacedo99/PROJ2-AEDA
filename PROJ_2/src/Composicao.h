@@ -21,12 +21,27 @@ private:
 	/**
 	 * Numero de dias que falta ate a proxima manutencao da composicao
 	 */
-	int prox_manut;
+	int proxManut;
 
 	/**
 	 * Indica se a composicao se encontra avariada ou nao
 	 */
 	bool avaria;
+
+	/**
+	 * Variavel static que indica se a manutencao de uma dada composicao se encontra proxima (em dias)
+	 */
+	static int manutProxima;
+
+	/**
+	 * Indica o id da composicao (proprio de cada uma)
+	 */
+	int idC;
+
+	/**
+	 * Variavel static utilizada para atribuir um id a cada uma das composicoes
+	 */
+	static int compNextId;
 
 
 public:
@@ -36,8 +51,13 @@ public:
 	 * @param prox_manut Dias que faltam ate a proxima manutencao da composicao
 	 * @param avaria Se a maquina esta avariada ou nao
 	 */
-	Composicao(int prox_manut, bool avaria): prox_manut(prox_manut), avaria(avaria){}
+	Composicao(int prox_manut, bool avaria): proxManut(prox_manut), idC(++compNextId), avaria(avaria){}
 
+	/**
+	 * Metodo que retorna o numero de id de uma dada composicao
+	 * @return Numero de id
+	 */
+	int getId() const;
 
 	/**
 	 * Metodo que retorna o numero de dias que falta para a proxima manutencao dessa composicao
@@ -57,11 +77,28 @@ public:
 	void fazManutencao();
 
 	/**
+	 * Metodo que retorna o numero de dias que indica se a data de manutencao de uma composicao esta proxima ou nao
+	 * @return Numero de dias
+	 */
+	static int getManutProxima();
+
+	/**
+	 * Metodo que atribui um valor ao numero de dias que indica se a manutencao de uma composicao esta proxima ou nao
+	 * @param numDias Numero de dias a ser atribuido
+	 */
+	static void setManutProxima(int numDias);
+
+	/**
 	 * Overload do operador menor para a classe Composicao (permitindo assim o seu uso em filas de prioridade)
 	 * @param c Composicao a comparar com o objeto que chamou o metodo
 	 * @return True se a 1a composicao e menor
 	 */
 	bool operator<(Composicao c);
+
+	/**
+	 * Imprime no ecra as informacoes relativas a composicao que chamou o metodo
+	 */
+	void imprimeInfoComp();
 };
 
 #endif /* COMPOSICAO_H_ */

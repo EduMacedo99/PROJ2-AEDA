@@ -36,6 +36,16 @@ protected:
 	 */
 	string pt_venda;
 
+	/**
+	 * Identificador do funcionario
+	 */
+	unsigned int id;
+
+	/**
+	 * Identificador do proximo funcionario a criar
+	 */
+	static unsigned int nextIdF;
+
 public:
 	/**
 	 * Construtor da classe
@@ -45,7 +55,7 @@ public:
 	 * @param pt_v Ponto de venda em que o funcionario trabalha
 	 */
 	Funcionario(string n, unsigned int sal, string f, string pt_v):
-		nome(n), salario(sal), funcao(f), pt_venda(pt_v){}
+		nome(n), salario(sal), funcao(f), pt_venda(pt_v), id(++nextIdF){}
 
 	/**
 	 * Destrutor da classe
@@ -77,11 +87,48 @@ public:
 	string getPtVenda() const;
 
 	/**
+	 * Metodo que devolve o id do funcionario
+	 * @return Id do funcionario
+	 */
+	unsigned int getId() const;
+
+	/**
 	 * Overload do operador menor para esta classe
-	 * @param Funcionario a comparar ao objeto que chama o metodo
+	 * @param f Funcionario a comparar ao objeto que chama o metodo
 	 * @return True se o funcionario que chama o metodo tem menor salario ou vem primeiro em ordem alfabetica ou false se nao
 	 */
-	bool operator<(Funcionario f);
+	bool operator<(const Funcionario &f) const;
+
+	/**
+	 * Overload do operador igual para esta classe
+	 * @param f Funcionario a comparar ao objeto que chama o metodo
+	 * @return True se ambos os funcionarios tiverem o mesmo id
+	 */
+	bool operator==(const Funcionario &f) const;
+};
+
+
+class FuncionarioInexistente{
+
+private:
+	/**
+	 * Id do funcionario nao existente
+	 */
+	unsigned int id;
+
+public:
+	/**
+	 * Construtor da classe
+	 * @param id Id do funcionario nao existente
+	 */
+	FuncionarioInexistente(unsigned int id): id(id){}
+
+	/**
+	 * Metodo de acesso ao id do funcionario que nao existe
+	 * @return Id do funcionario nao existente
+	 */
+	unsigned int getId();
 };
 
 #endif /* FUNCIONARIO_H_ */
+

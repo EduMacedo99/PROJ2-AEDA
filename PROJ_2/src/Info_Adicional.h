@@ -2,7 +2,7 @@
 #define INFO_ADICIONAL_H_
 
 #include <set>
-#include <priority_queue>
+#include <queue>
 #include <unordered_set>
 
 //CLASSE QUE VAI TER AS ESTRUTURAS DA 2ª PARTE DO PROJETO
