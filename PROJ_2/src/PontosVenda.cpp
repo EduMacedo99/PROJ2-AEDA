@@ -698,3 +698,62 @@ void PontosVenda::imprimeInfoComposicoes() const{
 	}
 }
 
+
+bool PontosVenda::adicionaComposicao(Composicao c){
+
+	priority_queue<Composicao> buffer = composicoes;
+
+	while(!buffer.empty()){
+
+		Composicao atual = buffer.top();
+		buffer.pop();
+
+		if(atual.getID() == c.getID())
+			return false;
+	}
+
+	composicoes.push(c);
+	return true;
+}
+
+
+bool PontosVenda::eliminaComposicao(unsigned id){
+
+	priority_queue<Composicao> buffer;
+	bool encontrou = false;
+
+	while(!composicoes.empty){
+
+		Composicao atual = composicoes.top();
+		composicoes.pop();
+
+		if(atual.getID() == id)
+			encontrou = true;
+		else buffer.push(atual);
+
+	}
+
+	composicoes = buffer;
+	if(encontrou)
+		return true;
+	else return false;
+}
+
+
+void PontosVenda::avancaDiaComp(){
+
+	priority_queue<Composicao> buffer;
+
+	while(!composicoes.empty){
+
+		Composicao atual = composicoes.top();
+		composicoes.pop();
+
+		atual.avancaDia();
+
+		buffer.push(atual);
+	}
+
+	composicoes = buffer;
+}
+

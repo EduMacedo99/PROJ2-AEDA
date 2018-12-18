@@ -26,7 +26,7 @@ void Composicao::fazManutencao(){
 }
 
 
-bool Composicao::operator<(Composicao c){
+bool Composicao::operator<(Composicao c) const{
 	return proxManut > c.getProxManut();
 }
 
@@ -47,4 +47,8 @@ void Composicao::imprimeInfoComp(){
 	if(avaria)
 		cout << "sim";
 	else cout << "nao";
+}
+
+void Composicao::avancaDia(){
+	proxManut--;
 }

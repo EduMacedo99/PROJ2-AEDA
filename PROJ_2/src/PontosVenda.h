@@ -228,6 +228,27 @@ public:
 	 */
 	void imprimeInfoComposicoes() const;
 
+	/**
+	 * Metodo que adiciona uma composicao a estrutura que mantem a informacao sobre as composicoes
+	 * @param c Composicao que se pretende adicionar
+	 * @return True se adicionou, false caso contrario (composicao ja estava presente na estrutura)
+	 */
+	bool adicionaComposicao(Composicao c);
+
+	/**
+	 * Metodo que elimina uma composicao da estrutura de dados
+	 * @param id ID da composicao a eliminar
+	 * @return True se conseguiu eliminar, false caso contrario (composicao nao esta presente na estrutura)
+	 */
+	bool eliminaComposicao(unsigned id);
+
+	/**
+	 * Metodo que simula o avanco de um dia, atualizando as composicoes presentes na estrutura de dados
+	 */
+	void avancaDiaComp();
+
+	//falta metodo que faz a manutencao das composicoes (ve as avarias, etc)
+
 };
 
 #endif /* PONTOSVENDA_H_ */

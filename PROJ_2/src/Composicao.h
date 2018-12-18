@@ -51,7 +51,7 @@ public:
 	 * @param prox_manut Dias que faltam ate a proxima manutencao da composicao
 	 * @param avaria Se a maquina esta avariada ou nao
 	 */
-	Composicao(int prox_manut, bool avaria): proxManut(prox_manut), idC(++compNextId), avaria(avaria){}
+	Composicao(int prox_manut, bool avaria): proxManut(prox_manut), avaria(avaria), idC(++compNextId){}
 
 	/**
 	 * Metodo que retorna o numero de id de uma dada composicao
@@ -93,12 +93,17 @@ public:
 	 * @param c Composicao a comparar com o objeto que chamou o metodo
 	 * @return True se a 1a composicao e menor
 	 */
-	bool operator<(Composicao c);
+	bool operator<(Composicao c) const;
 
 	/**
 	 * Imprime no ecra as informacoes relativas a composicao que chamou o metodo
 	 */
 	void imprimeInfoComp();
+
+	/**
+	 * Metodo que simula o avanco de um dia; atualiza o numero de dias que falta ate a manutencao da composicao
+	 */
+	void avancaDia();
 };
 
 #endif /* COMPOSICAO_H_ */
