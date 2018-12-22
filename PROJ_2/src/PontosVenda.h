@@ -201,10 +201,18 @@ public:
 
 	/**
 	 * Funcao que procura o funcionario com o id introduzido no set e lanca uma excecao se nao encontrar
-	 * @param id identificador do funcionario que se procura
-	 * @return Funcionario com o id introduzido
+	 * @param name Nome do funcionario que se procura
+	 * @param salario Salario do funcionario que se procura
+	 * @return Funcionario com o nome e salario introduzidos
 	 */
-	Funcionario getFuncionario(unsigned int id) const;
+	Funcionario getFuncionario(string name, unsigned int salario) const;
+
+	/**
+	 * Funcao que procura um funcionario e retorna true se encontrou e false se nao encontrou; similar a funcao anterior
+	 * @param f Funcionario que se procura
+	 * @return true se encontrou o funcionario e false se nao o encontrou
+	 */
+	bool findFuncionario(Funcionario f) const;
 
 	/**
 	 * Funcao que adiciona um funcionario ao set funcionarios
@@ -219,6 +227,22 @@ public:
 	 * @return true se e removido com sucesso e false se nao e
 	 */
 	bool removeFuncionario(Funcionario f);
+
+	/**
+	 * Funcao que muda o salario de um funcionario
+	 * @param f Funcionario a mudar o salario
+	 * @param salario Novo salario que o funcionario vai ter
+	 * @return true se alterou com sucesso e false se o funcionario nao foi encontrado
+	 */
+	bool setSalario(Funcionario f, unsigned int salario);
+
+	/**
+	 * Funcao que muda a funcao de um funcionario
+	 * @param f Funcionario a mudar a funcao
+	 * @param funcao Nova funcao que o funcionario vai ter
+	 * @return true se alterou com sucesso e false se o funcionario nao foi encontrado
+	 */
+	bool setFuncao(Funcionario f, string funcao);
 
 
 	//----------COMPOSICAO------------

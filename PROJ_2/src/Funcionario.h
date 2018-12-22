@@ -36,16 +36,6 @@ protected:
 	 */
 	string pt_venda;
 
-	/**
-	 * Identificador do funcionario
-	 */
-	unsigned int id;
-
-	/**
-	 * Identificador do proximo funcionario a criar
-	 */
-	static unsigned int nextIdF;
-
 public:
 	/**
 	 * Construtor da classe
@@ -55,7 +45,7 @@ public:
 	 * @param pt_v Ponto de venda em que o funcionario trabalha
 	 */
 	Funcionario(string n, unsigned int sal, string f, string pt_v):
-		nome(n), salario(sal), funcao(f), pt_venda(pt_v), id(++nextIdF){}
+		nome(n), salario(sal), funcao(f), pt_venda(pt_v){}
 
 	/**
 	 * Destrutor da classe
@@ -87,10 +77,22 @@ public:
 	string getPtVenda() const;
 
 	/**
-	 * Metodo que devolve o id do funcionario
-	 * @return Id do funcionario
+	 * Metodo que muda o salario do funcionario
+	 * @param s Salario que o funcionario vai passar a ter
 	 */
-	unsigned int getId() const;
+	void changeSalario(unsigned int s);
+
+	/**
+	 * Metodo que muda a funcao do funcionario
+	 * @param f Funcao que o funcionario vai passar a ter
+	 */
+	void changeFuncao(string f);
+
+	/**
+	 * Metodo que muda o ponto de venda em que o funcionario trabalha
+	 * @param pt_venda Ponto de venda em que o funcionario vai passar a trabalhar
+	 */
+	void changePtVenda(string pt_vendaN);
 
 	/**
 	 * Overload do operador menor para esta classe
@@ -112,22 +114,33 @@ class FuncionarioInexistente{
 
 private:
 	/**
-	 * Id do funcionario nao existente
+	 * Nome do funcionario que se tentou procurar
 	 */
-	unsigned int id;
+	string nome;
+
+	/**
+	 * Salario do funcionario que se tentou procurar
+	 */
+	unsigned int salario;
 
 public:
 	/**
 	 * Construtor da classe
 	 * @param id Id do funcionario nao existente
 	 */
-	FuncionarioInexistente(unsigned int id): id(id){}
+	FuncionarioInexistente(string name, unsigned int s): nome(name), salario(s){}
 
 	/**
-	 * Metodo de acesso ao id do funcionario que nao existe
-	 * @return Id do funcionario nao existente
+	 * Metodo de acesso ao nome do funcionario que nao existe
+	 * @return Nome do funcionario nao existente
 	 */
-	unsigned int getId();
+	string getNome();
+
+	/**
+	 * Metodo de acesso ao salario do funcionario que nao existe
+	 * @return Salario do funcionario nao existente
+	 */
+	unsigned int getSalario();
 };
 
 #endif /* FUNCIONARIO_H_ */

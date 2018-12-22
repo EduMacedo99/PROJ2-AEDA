@@ -649,32 +649,77 @@ void PontosVenda::sortPDV(string local, bool crescente){
 set<Funcionario> PontosVenda::getFuncionarios() {return funcionarios;}
 
 
-Funcionario PontosVenda::getFuncionario(unsigned int id) const {
+Funcionario PontosVenda::getFuncionario(string name, unsigned int salario) const {
 
 	set<Funcionario>::iterator itr = funcionarios.begin();
 	set<Funcionario>::iterator itre = funcionarios.end();
 
 	while(itr != itre){
-		if(itr->getId() == id)
+		if(itr->getNome() == name && itr->getSalario() == salario)
 			return *itr;
 
 		itr++;
 	}
 
-	throw FuncionarioInexistente(id);
+	throw FuncionarioInexistente(name, salario);
 }
 
+bool PontosVenda::findFuncionario(Funcionario f) const{
 
+	set<Funcionario>::iterator itr = funcionarios.begin();
+	set<Funcionario>::iterator itre = funcionarios.end();
+
+	while(itr != itre){
+		if(*itr == f)
+			return true;
+
+		itr++;
+	}
+
+	return false;
+}
+
+//Nota: nao podem haver 2 funcionarios com o mesmo nome e salario, pois a estrutura set nao pode ter
+//dois membros iguais
 bool PontosVenda::addFuncionario(Funcionario f){
 	return funcionarios.insert(f).second;
 }
 
-
-//nao terminada
 bool PontosVenda::removeFuncionario(Funcionario f){
-	funcionarios.erase(f);
-	return true;
+
+	if(findFuncionario(f)){
+
+		funcionarios.erase(f);
+		return true;
+	}
+
+	return false;
 }
+
+//Como objetos dentro de um set nao podem ser alterados, tem que se remover o funcionario e voltar a
+//inseri-lo depois de alterar o salario, ficando este ja inserido na ordem correta
+bool PontosVenda::setSalario(Funcionario f, unsigned int salario){
+
+	if(removeFuncionario(f)){
+		f.changeSalario(salario);
+		addFuncionario(f);
+		return true;
+	}
+
+	return false;
+}
+
+bool PontosVenda::setFuncao(Funcionario f, string funcao){
+
+	if(removeFuncionario(f)){
+		f.changeFuncao(funcao);
+		addFuncionario(f);
+		return true;
+	}
+
+	return false;
+}
+
 
 //----------COMPOSICAO------------
 

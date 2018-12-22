@@ -3,8 +3,6 @@
 
 using namespace std;
 
-unsigned int Funcionario::nextIdF = 0;
-
 string Funcionario::getNome() const { return nome;}
 
 unsigned int Funcionario::getSalario() const { return salario;}
@@ -13,7 +11,17 @@ string Funcionario::getFuncao() const { return funcao;}
 
 string Funcionario::getPtVenda() const { return pt_venda;}
 
-unsigned int Funcionario::getId() const { return id;}
+void Funcionario::changeSalario(unsigned int s){
+	this->salario = s;
+}
+
+void Funcionario::changeFuncao(string f){
+	this->funcao = f;
+}
+
+void Funcionario::changePtVenda(string pt_vendaN){
+	this->pt_venda = pt_vendaN;
+}
 
 bool Funcionario::operator<(const Funcionario &f) const{
 
@@ -27,6 +35,10 @@ bool Funcionario::operator==(const Funcionario &f) const{
 }
 
 
-unsigned int FuncionarioInexistente::getId(){
-	return id;
+string FuncionarioInexistente::getNome(){
+	return nome;
+}
+
+unsigned int FuncionarioInexistente::getSalario(){
+	return salario;
 }
