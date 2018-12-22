@@ -689,9 +689,8 @@ bool PontosVenda::addFuncionario(Funcionario f){
 
 	string local = f.getPtVenda();
 
-	for(size_t i = 0; i < ptsVenda.size(); i++)
-		if(ptsVenda[i]->getLocal() == local)
-			return insertFuncionario(f);
+	if(findPDV(local) != -1)
+		return insertFuncionario(f);
 
 	return false;
 }
