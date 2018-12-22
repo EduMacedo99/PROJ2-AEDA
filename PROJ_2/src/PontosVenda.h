@@ -217,7 +217,14 @@ public:
 	/**
 	 * Funcao que adiciona um funcionario ao set funcionarios
 	 * @param f Funcionario que se pretende adicionar
-	 * @return true se e adicionado com sucesso e false se nao e
+	 * @return true se for adicionado com sucesso e false se nao for
+	 */
+	bool insertFuncionario(Funcionario f);
+
+	/**
+	 * Funcao que adiciona um funcionario ao set funcionarios, mas so se o ponto de venda em que trablha existir
+	 * @param f Funcionario que se pretende adicionar
+	 * @return true se for adicionado com sucesso e false se nao for ou o ponto de venda nao existir
 	 */
 	bool addFuncionario(Funcionario f);
 
@@ -230,7 +237,7 @@ public:
 
 	/**
 	 * Funcao que muda o salario de um funcionario
-	 * @param f Funcionario a mudar o salario
+	 * @param f Funcionario a alterar
 	 * @param salario Novo salario que o funcionario vai ter
 	 * @return true se alterou com sucesso e false se o funcionario nao foi encontrado
 	 */
@@ -238,11 +245,19 @@ public:
 
 	/**
 	 * Funcao que muda a funcao de um funcionario
-	 * @param f Funcionario a mudar a funcao
+	 * @param f Funcionario a alterar
 	 * @param funcao Nova funcao que o funcionario vai ter
 	 * @return true se alterou com sucesso e false se o funcionario nao foi encontrado
 	 */
 	bool setFuncao(Funcionario f, string funcao);
+
+	/**
+	 * Funcao que muda o ponto de venda em que um funcionario trabalha
+	 * @param f Funcionario a alterar
+	 * @param pt_venda Novo ponto de venda em que o funcionario vai trabalhar
+	 * @return true se alterou com sucesso e false se o funcionario ou ponto de venda novo nao foi encontrado
+	 */
+	bool setPtVenda(Funcionario f, string pt_venda);
 
 
 	//----------COMPOSICAO------------

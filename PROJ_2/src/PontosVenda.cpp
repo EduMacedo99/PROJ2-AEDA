@@ -681,8 +681,19 @@ bool PontosVenda::findFuncionario(Funcionario f) const{
 
 //Nota: nao podem haver 2 funcionarios com o mesmo nome e salario, pois a estrutura set nao pode ter
 //dois membros iguais
-bool PontosVenda::addFuncionario(Funcionario f){
+bool PontosVenda::insertFuncionario(Funcionario f){
 	return funcionarios.insert(f).second;
+}
+
+bool PontosVenda::addFuncionario(Funcionario f){
+
+	string local = f.getPtVenda();
+
+	for(size_t i = 0; i < ptsVenda.size(); i++)
+		if(ptsVenda[i]->getLocal() == local)
+			return insertFuncionario(f);
+
+	return false;
 }
 
 bool PontosVenda::removeFuncionario(Funcionario f){
@@ -702,8 +713,7 @@ bool PontosVenda::setSalario(Funcionario f, unsigned int salario){
 
 	if(removeFuncionario(f)){
 		f.changeSalario(salario);
-		addFuncionario(f);
-		return true;
+		return insertFuncionario(f);
 	}
 
 	return false;
@@ -713,8 +723,17 @@ bool PontosVenda::setFuncao(Funcionario f, string funcao){
 
 	if(removeFuncionario(f)){
 		f.changeFuncao(funcao);
-		addFuncionario(f);
-		return true;
+		return insertFuncionario(f);
+	}
+
+	return false;
+}
+
+bool PontosVenda::setPtVenda(Funcionario f, string pt_venda){
+
+	if(removeFuncionario(f)){
+		f.changePtVenda(pt_venda);
+		return addFuncionario(f);
 	}
 
 	return false;
