@@ -124,8 +124,22 @@ bool Loja::eraseBilheteA(unsigned int id){
 	if(pos != -1){
 		bilhetesA.erase(bilhetesA.begin() + pos);
 		return true;
-}
+	}
 	return false;
+
+	/*bool encontrou = false;
+
+		while(true){
+			int pos = findUtente(id);
+
+			if(pos != -1){
+				bilhetesA.erase(bilhetesA.begin() + pos);
+				encontrou = true;
+			}
+			else break;
+		}
+
+		return encontrou;*/
 }
 
 

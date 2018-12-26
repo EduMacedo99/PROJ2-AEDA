@@ -73,6 +73,11 @@ ostream& operator<<(ostream &os, const Utente&u){
 }
 
 
+void Utente::avancaDia(){
+	diasAteExpirar--;
+}
+
+
 void Utente::imprimeInfoUtente() const{
 
 	cout << "ID: " << id << endl;

@@ -743,14 +743,16 @@ bool PontosVenda::setPtVenda(Funcionario f, string pt_venda){
 
 void PontosVenda::imprimeInfoComposicoes() const{
 
+	cout << "Num de dias de uma manutencao proxima: " << Composicao::getManutProxima() << endl;
+
 	priority_queue<Composicao> buffer = composicoes;
 
 	if(buffer.empty()){
-		cout << "Nao ha informacao relativa as composicoes!" << endl;
+		cout << "Nao ha informacao relativa as composicoes!" << endl << endl << endl;
 		return;
 	}
 
-	cout << endl;
+	cout << endl << "Composicoes:" << endl;
 	while(!buffer.empty()){
 
 		Composicao atual = buffer.top();
@@ -785,7 +787,7 @@ bool PontosVenda::eliminaComposicao(unsigned id){
 	priority_queue<Composicao> buffer;
 	bool encontrou = false;
 
-	while(!composicoes.empty){
+	while(!composicoes.empty()){
 
 		Composicao atual = composicoes.top();
 		composicoes.pop();
@@ -803,11 +805,37 @@ bool PontosVenda::eliminaComposicao(unsigned id){
 }
 
 
+bool PontosVenda::poeCompAvariada(unsigned id){
+
+		priority_queue<Composicao> buffer;
+		bool encontrou = false;
+
+		while(!composicoes.empty()){
+
+			Composicao atual = composicoes.top();
+			composicoes.pop();
+
+			if(atual.getID() == id){
+				encontrou = true;
+				atual.poeAvariada();
+				buffer.push(atual);
+			}
+			else buffer.push(atual);
+
+		}
+
+		composicoes = buffer;
+		if(encontrou)
+			return true;
+		else return false;
+}
+
+
 void PontosVenda::avancaDiaComp(){
 
 	priority_queue<Composicao> buffer;
 
-	while(!composicoes.empty){
+	while(!composicoes.empty()){
 
 		Composicao atual = composicoes.top();
 		composicoes.pop();
@@ -818,5 +846,55 @@ void PontosVenda::avancaDiaComp(){
 	}
 
 	composicoes = buffer;
+}
+
+
+void PontosVenda::atualizaComp(){
+
+	avancaDiaComp(); //avanca um dia
+
+	priority_queue<Composicao> buffer;
+
+	while(!composicoes.empty()){
+
+		Composicao atual = composicoes.top();
+		composicoes.pop();
+
+		//se estamos no dia da manutencao, ou se a composicao esta avariada e falta menos de x dias para a manutencao
+		if((atual.getProxManut() == 0) || ((atual.getAvaria()) && (atual.getProxManut() < Composicao::getManutProxima()))){
+
+			atual.fazManutencao();
+		}
+
+		buffer.push(atual);
+
+	}
+
+	composicoes = buffer;
+}
+
+//----------UTENTES INATIVOS------------
+
+void PontosVenda::adicionaUtenteInat(Utente* u){
+	utentesInativos.insert(u); //se ja se encontrar na tabela um utente com o mesmo id, nao faz nada
+}
+
+void PontosVenda::eliminaUtenteInat(unsigned id){
+
+	tabDispUtentesInat::iterator itr = utentesInativos.begin();
+	tabDispUtentesInat::iterator itre = utentesInativos.end();
+
+	while(itr != itre){
+
+		Utente* atual = (*itr);
+
+		if(atual->getId() == id){
+
+			utentesInativos.erase(itr);
+			return;
+		}
+
+		itr++;
+	}
 }
 

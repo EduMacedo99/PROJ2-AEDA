@@ -6,7 +6,7 @@ int Composicao::manutProxima;
 
 int Composicao::compNextId = 0;
 
-int Composicao::getId() const{
+int Composicao::getID() const{
 	return idC;
 }
 
@@ -36,6 +36,10 @@ int Composicao::getManutProxima(){
 
 void Composicao::setManutProxima(int numDias){
 	manutProxima = numDias;
+}
+
+void Composicao::poeAvariada(){
+	avaria = true;
 }
 
 

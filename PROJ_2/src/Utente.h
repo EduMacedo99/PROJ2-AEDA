@@ -47,7 +47,7 @@ public:
 	Utente(string nome): nome(nome), id(++nextId), diasAteExpirar(numDiasExpiracao) {}
 
 	/**
-	 * Outro onstrutor da classe
+	 * Outro construtor da classe
 	 * @param nome Nome do utente
 	 * @param numDias Numero de dias ate ficar inativo
 	 */
@@ -80,6 +80,11 @@ public:
 	 * @return Numero de dias
 	 */
 	int getDiasAteExpirar() const;
+
+	/**
+	 * Metodo que simula o avanco de um dia; atualiza o numero de dias que falta para o utente ser considerado inativo
+	 */
+	void avancaDia();
 
 	/**
 	 * Metodo que retorna o numero maximo de dias que um utente pode ficar sem comprar um bilhete, ate ser considerado inativo

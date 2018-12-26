@@ -134,7 +134,7 @@ public:
 		void addBilheteA(BilheteAssinatura& bilhete);
 
 		/**
-		 * Metodo que elimina bilhete assinatura do vetor bilhetesA com base no id do utente
+		 * Metodo que elimina o bilhete assinatura do vetor bilhetesA com base no id do utente
 		 * @param id Id do utente cujo bilhete assinatura sera eliminado
 		 * @return True se conseguiu apagar o bilhete, false caso contrario
 		 */

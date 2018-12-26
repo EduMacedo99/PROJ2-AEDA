@@ -57,7 +57,7 @@ public:
 	 * Metodo que retorna o numero de id de uma dada composicao
 	 * @return Numero de id
 	 */
-	int getId() const;
+	int getID() const;
 
 	/**
 	 * Metodo que retorna o numero de dias que falta para a proxima manutencao dessa composicao
@@ -87,6 +87,13 @@ public:
 	 * @param numDias Numero de dias a ser atribuido
 	 */
 	static void setManutProxima(int numDias);
+
+
+	/**
+	 * Metodo que modifica uma composicao, indicando que ela se avariou
+	 */
+	void poeAvariada();
+
 
 	/**
 	 * Overload do operador menor para a classe Composicao (permitindo assim o seu uso em filas de prioridade)

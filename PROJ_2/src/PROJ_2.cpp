@@ -10,6 +10,46 @@
 using namespace std;
 
 /**
+ * Funcao que pede ao utilizador o numero de meses necessario sem comprar bilhete para um utente ser considerado inativo
+ */
+void pedeNumDiasExpiaracao(){
+	int valor;
+
+	do{
+		cout << "Indique o numero de meses que um utente tem de ficar sem comprar bilhete para ser considerado inativo: ";
+		cin >> valor;
+
+		if(valor <= 0){
+			cout << "Valor invalido." << endl;
+		}
+
+	}while(valor <= 0);
+
+	Utente::setNumDiasExpiracao(valor*30);
+}
+
+
+/**
+ * Funcao que pede ao utilizador o numero de dias maximos que deverao faltar para uma manutencao de uma composicao se considerar proxima
+ */
+void pedeManutProx(){
+		int valor;
+
+	do{
+		cout << "Indique o numero de dias para uma manutencao se considerar proxima: ";
+		cin >> valor;
+
+		if(valor <= 0){
+		cout << "Valor invalido." << endl;
+		}
+
+	}while(valor <= 0);
+
+	Composicao::setManutProxima(valor);
+}
+
+
+/**
  * Funcao que pede ao utilizador do programa que insira os precos desejados para os bilhetes (unico, diario e assinatura), para cada zona
  */
 void pedePrecoZonas(){
@@ -260,6 +300,12 @@ int main(){
 
 
 	cout << endl << endl;
+
+	//------------
+	pedeManutProx();
+	cout << endl << endl;
+	//------------
+
 	char sndOp;
 
 	do{
@@ -274,8 +320,17 @@ int main(){
 		cout << "c -> comprar/adicionar um bilhete qualquer, num determinado ponto de venda" << endl;
 		cout << "a -> apagar uma assinatura do sistema, eliminando o utente e o seu bilhete assinatura" << endl;
 		cout << "r -> remover um ponto de venda qualquer do sistema (e consequentemente todos os seus bilhetes), especificado pelo seu local" << endl;
-		cout << "n -> adicionar um novo ponto de venda (maquina ou loja) ao sistema" << endl;
-		cout << "s -> sair do programa" << endl;
+		cout << "n -> adicionar um novo ponto de venda (maquina ou loja) ao sistema" << endl << endl;
+
+		cout << "Novas funcoes:" << endl;
+/*-->*/ cout << "b -> adicionar uma nova composicao a base de dados" << endl;
+/*-->*/ cout << "e -> eliminar uma composicao da base de dados" << endl;
+/*-->*/ cout << "y -> imprimir toda a informacao relativa as composicoes do metro" << endl;
+/*-->*/ cout << "t -> simular o avanco de um dia, atualizando as composicoes" << endl;
+/*-->*/ cout << "v -> indicar que uma determinada composicao se avariou" << endl;
+/*-->*/ cout << "w -> modificar o numero de dias maximos que deverao faltar para uma manutencao de uma composicao se considerar proxima" << endl;
+
+		cout << endl << "s -> sair do programa" << endl;
 		cout << "Operacao: ";
 		cin >> sndOp;
 		cout << endl;
@@ -546,6 +601,101 @@ int main(){
 
 				cout << "Ja existe um ponto de venda no local " << lr.getLocal() << "!" << endl << endl;
 			}
+
+
+	//---------------
+	//escolheu-se a opcao de criacao de uma nova composicao
+	}else if (sndOp == 'b'){
+
+		int numDias;
+		bool avaria;
+		char av;
+
+		do{
+			cout << "Quantos dias faltam para a proxima manutencao da composicao? ";
+			cin >> numDias;
+
+			if(numDias <= 0)
+				cout << "Valor invalido." << endl;
+
+		}while(numDias <= 0);
+
+		do{
+			cout << "A composicao esta avariada?" << endl << "s -> sim" << endl << "n -> nao" << endl;
+			cin >> av;
+
+			if((av != 's') && (av != 'n'))
+				cout << "Valor invalido." << endl;
+
+
+		}while((av != 's') && (av != 'n'));
+
+
+		if(av == 's')
+			avaria = true;
+		else avaria = false;
+
+		Composicao nova(numDias, avaria);
+
+		cout << endl;
+
+		//Na verdade, como nao irao haver IDs repetidos, ira dar sempre para adicionar; mais uma vez,
+		//achamos que seria boa pratica adicionar na mesma o tratamento do caso.
+
+		if(!pv.adicionaComposicao(nova))
+			cout << "Ja existente uma composicao equivalente na base de dados!" << endl;
+		else cout << endl << "---------" << endl << "Operacao efetuada com sucesso!" << endl << "---------" << endl;
+
+
+
+	//---------------
+	//escolheu-se a opcao de eliminacao de uma composicao
+	}else if(sndOp == 'e'){
+
+		int id;
+		cout << "Indique o ID da composicao a eliminar: ";
+		cin >> id;
+
+		if(pv.eliminaComposicao(id))
+			cout << endl << "---------" << endl << "Operacao efetuada com sucesso!" << endl << "---------" << endl;
+		else cout << "Nao existe nenhuma composicao com ID igual a " << id << "!" << endl << endl;
+
+
+
+
+	//---------------
+	//escolheu-se a opcao de impressao de toda a informacao relativa as composicoes
+	}else if(sndOp == 'y'){
+
+		pv.imprimeInfoComposicoes();
+
+
+	//---------------
+	//escolheu-se a opcao de simulacao de avanco de um dia, atualizando as composicoes
+	}else if(sndOp == 't'){
+
+		pv.atualizaComp();
+
+		cout << endl << "---------" << endl << "Operacao efetuada com sucesso!" << endl << "---------" << endl;
+
+
+	//---------------
+	//escolheu-se a opcao de modificar o numero de dias para uma manutencao de uma composicao se considerar proxima
+	}else if(sndOp == 'w'){
+
+		pedeManutProx();
+
+	//---------------
+	//escolheu-se a opcao de indicar que uma dada composicao se avariou
+	}else if(sndOp == 'v'){
+		int id;
+		cout << "Indique o ID da composicao a modificar: ";
+		cin >> id;
+
+		if(pv.poeCompAvariada(id))
+			cout << endl << "---------" << endl << "Operacao efetuada com sucesso!" << endl << "---------" << endl;
+		else cout << "Nao existe nenhuma composicao com ID igual a " << id << "!" << endl << endl;
+
 
 
 	//---------------

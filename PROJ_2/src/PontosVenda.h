@@ -15,6 +15,37 @@
 #include "Composicao.h"
 
 /**
+ * Struct que encapsula a hash function e a equal function para a organizacao dos utentes inativos na tabela de dispersao
+ */
+struct UtenteInativoHash{
+
+	/**
+	 * Hash Function
+	 */
+	int operator()(const Utente* u) const{
+
+		//como cada utente tem um id especifico e nao repetido, a hash function, ao organizar
+		//os elementos da tabela de dispersao pelo id, evita deste modo a ocorrencia de
+		//muitas colisoes.
+		return u->getId();
+	}
+
+	/**
+	 * Equal Function
+	 */
+	bool operator()(const Utente* u1, const Utente* u2) const{
+
+		//dois utentes sao iguais quando tem IDs iguais
+		return (u1->getId() == u2->getId());
+	}
+};
+
+
+typedef unordered_set<Utente*, UtenteInativoHash, UtenteInativoHash> tabDispUtentesInat;
+
+
+
+/**
  * Classe utilizada para englobar toda a informacao referente aos pontos de venda da cidade
  */
 class PontosVenda{
@@ -31,16 +62,25 @@ private:
 	 */
 	vector<Utente*> utentes;
 
+
+	//-------Novas estruturas-------//
+
 	/**
-	 * Estrutura com todos os funcionarios do metro
+	 * Set (arvore binaria de pesquisa) com todos os funcionarios do metro
 	 */
 	set<Funcionario> funcionarios;
 
 
 	/**
-	 * Estrutura que tem todas as composicoes de metros na base de dados, e informacao relativa
+	 * Fila de prioridade que tem todas as composicoes de metros na base de dados, e informacao relativa
 	 */
 	priority_queue<Composicao> composicoes;
+
+
+	/**
+	 * Tabela de dispersao contendo todos os utentes inativos
+	 */
+	tabDispUtentesInat utentesInativos;
 
 
 public:
@@ -222,7 +262,7 @@ public:
 	bool insertFuncionario(Funcionario f);
 
 	/**
-	 * Funcao que adiciona um funcionario ao set funcionarios, mas so se o ponto de venda em que trablha existir
+	 * Funcao que adiciona um funcionario ao set funcionarios, mas so se o ponto de venda em que trabalha existir
 	 * @param f Funcionario que se pretende adicionar
 	 * @return true se for adicionado com sucesso e false se nao for ou o ponto de venda nao existir
 	 */
@@ -282,11 +322,35 @@ public:
 	bool eliminaComposicao(unsigned id);
 
 	/**
+	 * Metodo que modifica uma determinada composicao da base de dados, para indicar que ela se avariou
+	 * @param id ID da composicao
+	 * @return True se modificou, false caso contrario (composicaonao esta presente na estrutura)
+	 */
+	bool poeCompAvariada(unsigned id);
+
+	/**
 	 * Metodo que simula o avanco de um dia, atualizando as composicoes presentes na estrutura de dados
 	 */
 	void avancaDiaComp();
 
-	//falta metodo que faz a manutencao das composicoes (ve as avarias, etc)
+	/**
+	 * Metodo para ser chamado na funcao principal; atualiza todas as composicoes, avancando um dia e realizando as manutencoes necessarias
+	 */
+	void atualizaComp();
+
+	//----------UTENTES INATIVOS------------
+
+	/**
+	 * Metodo que adiciona um utente inativo a tabela de dispersao (se o utente ja se encontra la, nao faz nada)
+	 * @param u Utente a ser adicionado
+	 */
+	void adicionaUtenteInat(Utente* u);
+
+	/**
+	 * Metodo que elimina um dado utente da tabela de dispersao, dado pelo seu id (se nao existe nenhum utente com esse ID, nao faz nada)
+	 * @param id ID do utente a eliminar
+	 */
+	void eliminaUtenteInat(unsigned id);
 
 };
 
