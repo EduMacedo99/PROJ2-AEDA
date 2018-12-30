@@ -34,6 +34,14 @@ bool Funcionario::operator==(const Funcionario &f) const{
 	return (salario == f.getSalario() && nome == f.getNome());
 }
 
+void Funcionario::imprimeInfoFuncionario() const{
+
+	cout << "Nome: " << nome << endl;
+	cout << "Salario: " << salario << endl;
+	cout << "Funcao: " << funcao << endl;
+	cout << "Ponto de Venda: " << pt_venda;
+}
+
 
 string FuncionarioInexistente::getNome(){
 	return nome;

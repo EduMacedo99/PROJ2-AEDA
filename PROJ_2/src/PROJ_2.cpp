@@ -323,6 +323,16 @@ int main(){
 		cout << "n -> adicionar um novo ponto de venda (maquina ou loja) ao sistema" << endl << endl;
 
 		cout << "Novas funcoes:" << endl;
+
+/*-->*/ cout << "o -> adicionar um novo funcionario a base de dados" << endl;
+/*-->*/ cout << "q -> remover um funcionario da base de dados" << endl;
+/*-->*/ cout << "m -> imprimir a informacao relativa a um grupo de funcionarios" << endl;
+/*-->*/ cout << "k -> modificar o salario de um funcionario existente" << endl;
+/*-->*/ cout << "f -> modificar a funcao de um funcionario existente" << endl;
+/*-->*/ cout << "g -> modificar o ponto de venda de um funcionario existente" << endl;
+
+		cout << endl;
+
 /*-->*/ cout << "b -> adicionar uma nova composicao a base de dados" << endl;
 /*-->*/ cout << "e -> eliminar uma composicao da base de dados" << endl;
 /*-->*/ cout << "y -> imprimir toda a informacao relativa as composicoes do metro" << endl;
@@ -602,6 +612,234 @@ int main(){
 				cout << "Ja existe um ponto de venda no local " << lr.getLocal() << "!" << endl << endl;
 			}
 
+
+
+	//---------------
+	//escolheu-se a opcao de adicao de um novo funcionario
+	}else if(sndOp == 'o'){
+
+		int salario;
+		string nome, funcao, pt_venda;
+
+		cout << "Qual o nome do funcionario? ";
+		cin.ignore(10, '\n');
+		getline(cin, nome);
+
+		cout << "Qual a funcao do funcionario? ";
+		getline(cin, funcao);
+
+
+		do{
+			cout << "Qual o salario do funcionario? ";
+			cin >> salario;
+
+			if(salario <= 0)
+				cout << "Valor invalido." << endl << endl;
+
+		}while(salario <= 0);
+
+
+		cout << "Qual o local do ponto de venda a que o funcionario ficara associado? ";
+		cin.ignore(10, '\n');
+		getline(cin, pt_venda);
+
+
+		if(pv.findPDV(pt_venda) == -1)
+			cout << endl << "O ponto de venda " << pt_venda << " nao existe!" << endl << endl;
+
+		else{
+
+			Funcionario func(nome, salario, funcao, pt_venda);
+
+			if(!pv.insertFuncionario(func))
+				cout << endl << "Ja existe um funcionario de nome " << nome << " e salario de " << salario << "!" << endl << endl << endl;
+			else cout << endl << "---------" << endl << "Operacao efetuada com sucesso!" << endl << "---------" << endl;
+
+
+		}
+
+
+
+	//---------------
+	//escolheu-se a opcao de remocao de um funcionario
+	}else if(sndOp == 'q'){
+
+		int salario;
+		string nome;
+
+		cout << "Qual o nome do funcionario? ";
+		cin.ignore(10, '\n');
+		getline(cin, nome);
+
+		do{
+			cout << "Qual o salario do funcionario? ";
+			cin >> salario;
+
+			if(salario <= 0)
+				cout << "Valor invalido." << endl << endl;
+
+		}while(salario <= 0);
+
+
+		if(!pv.removeFuncionario(nome, salario))
+			cout << endl << "Nao existe nenhum funcionario de nome " << nome << " e salario de " << salario << "!" << endl << endl << endl;
+		else cout << endl << "---------" << endl << "Operacao efetuada com sucesso!" << endl << "---------" << endl;
+
+
+
+	//---------------
+	//escolheu-se a opcao de impressao no ecra de um grupo de funcionarios
+	}else if(sndOp == 'm'){
+
+		char option;
+
+		do{
+			cout << "Que informacao pretende obter?" << endl;
+			cout << "t -> informacao sobre todos os funcionarios" << endl;
+			cout << "p -> informacao sobre todos os funcionarios de um determinado ponto de venda" << endl;
+			cout << "f -> informacao sobre todos os funcionarios com uma determinada funcao" << endl;
+			cin >> option;
+
+			if(option == 't'){
+
+				cout << endl;
+				pv.imprimeTodosFuncionarios();
+
+			}else if(option == 'p'){
+
+				string pdv;
+				cout << "Qual o local do ponto de venda? ";
+				cin.ignore(10, '\n');
+				getline(cin, pdv);
+
+				cout << endl;
+				pv.imprimeFuncionariosPDV(pdv);
+			}
+
+			else if(option == 'f'){
+
+				string func;
+				cout << "Qual a funcao desempenhada pelos funcionarios? ";
+				cin.ignore(10, '\n');
+				getline(cin, func);
+
+
+				cout << endl;
+				pv.imprimeFuncionariosFuncao(func);
+
+			}
+			else
+				cout << "Operacao invalida." << endl;
+
+
+		}while((option != 't') && (option != 'p') && (option != 'f'));
+
+
+	//---------------
+	//escolheu-se a opcao de modificacao do salario de um funcionario
+	}else if(sndOp == 'k'){
+
+		int salario, novoSalario;
+		string nome;
+
+		cout << "Qual o nome do funcionario? ";
+		cin.ignore(10, '\n');
+		getline(cin, nome);
+
+		do{
+			cout << "Qual o salario do funcionario? ";
+			cin >> salario;
+
+			if(salario <= 0)
+				cout << "Valor invalido." << endl << endl;
+
+		}while(salario <= 0);
+
+
+		do{
+			cout << "Qual o novo salario para atribuir ao funcionario? ";
+			cin >> novoSalario;
+
+			if(novoSalario <= 0)
+				cout << "Valor invalido." << endl << endl;
+
+		}while(novoSalario <= 0);
+
+
+		if(!pv.setFuncSalario(nome, salario, novoSalario))
+			cout << endl << "Nao existe nenhum funcionario de nome " << nome << " e salario de " << salario << "!" << endl << endl << endl;
+		else cout << endl << "---------" << endl << "Operacao efetuada com sucesso!" << endl << "---------" << endl;
+
+
+
+	//---------------
+	//escolheu-se a opcao de modificacao da funcao de um funcionario
+	}else if(sndOp == 'f'){
+
+		int salario;
+		string nome, novaFuncao;
+
+		cout << "Qual o nome do funcionario? ";
+		cin.ignore(10, '\n');
+		getline(cin, nome);
+
+		do{
+			cout << "Qual o salario do funcionario? ";
+			cin >> salario;
+
+			if(salario <= 0)
+				cout << "Valor invalido." << endl << endl;
+
+		}while(salario <= 0);
+
+
+		cout << "Qual a nova funcao do funcionario? ";
+		cin.ignore(10, '\n');
+		getline(cin, novaFuncao);
+
+
+		if(!pv.setFuncFuncao(nome, salario, novaFuncao))
+			cout << endl << "Nao existe nenhum funcionario de nome " << nome << " e salario de " << salario << "!" << endl << endl << endl;
+		else cout << endl << "---------" << endl << "Operacao efetuada com sucesso!" << endl << "---------" << endl;
+
+
+
+	//---------------
+	//escolheu-se a opcao de modificacao do ponto de venda de um funcionario
+	}else if(sndOp == 'g'){
+
+		int salario;
+		string nome, novoLocal;
+
+		cout << "Qual o nome do funcionario? ";
+		cin.ignore(10, '\n');
+		getline(cin, nome);
+
+		do{
+			cout << "Qual o salario do funcionario? ";
+			cin >> salario;
+
+			if(salario <= 0)
+				cout << "Valor invalido." << endl << endl;
+
+		}while(salario <= 0);
+
+
+		cout << "Qual o local do novo ponto de venda do funcionario? ";
+		cin.ignore(10, '\n');
+		getline(cin, novoLocal);
+
+
+		if(pv.findPDV(novoLocal) == -1)
+			cout << endl << "O ponto de venda " << novoLocal << " nao existe!" << endl << endl;
+
+		else{
+
+			if(!pv.setFuncPtVenda(nome, salario, novoLocal))
+				cout << endl << "Nao existe nenhum funcionario de nome " << nome << " e salario de " << salario << "!" << endl << endl << endl;
+			else cout << endl << "---------" << endl << "Operacao efetuada com sucesso!" << endl << "---------" << endl;
+
+		}
 
 	//---------------
 	//escolheu-se a opcao de criacao de uma nova composicao

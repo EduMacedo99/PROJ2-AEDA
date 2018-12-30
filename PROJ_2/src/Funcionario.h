@@ -107,6 +107,11 @@ public:
 	 * @return True se ambos os funcionarios tiverem o mesmo id
 	 */
 	bool operator==(const Funcionario &f) const;
+
+	/**
+	 * Metodo que imprime no ecra a informacao relativa a um funcionario
+	 */
+	void imprimeInfoFuncionario() const;
 };
 
 

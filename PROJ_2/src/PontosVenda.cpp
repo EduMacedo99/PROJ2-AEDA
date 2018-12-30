@@ -664,20 +664,6 @@ Funcionario PontosVenda::getFuncionario(string name, unsigned int salario) const
 	throw FuncionarioInexistente(name, salario);
 }
 
-bool PontosVenda::findFuncionario(Funcionario f) const{
-
-	set<Funcionario>::iterator itr = funcionarios.begin();
-	set<Funcionario>::iterator itre = funcionarios.end();
-
-	while(itr != itre){
-		if(*itr == f)
-			return true;
-
-		itr++;
-	}
-
-	return false;
-}
 
 //Nota: nao podem haver 2 funcionarios com o mesmo nome e salario, pois a estrutura set nao pode ter
 //dois membros iguais
@@ -685,57 +671,162 @@ bool PontosVenda::insertFuncionario(Funcionario f){
 	return funcionarios.insert(f).second;
 }
 
-bool PontosVenda::addFuncionario(Funcionario f){
 
-	string local = f.getPtVenda();
+void PontosVenda::imprimeTodosFuncionarios(){
 
-	if(findPDV(local) != -1)
-		return insertFuncionario(f);
-
-	return false;
-}
-
-bool PontosVenda::removeFuncionario(Funcionario f){
-
-	if(findFuncionario(f)){
-
-		funcionarios.erase(f);
-		return true;
+	if(funcionarios.empty()){
+		cout << "Nao ha informacao relativa a funcionarios!" << endl << endl;
+		return;
 	}
 
-	return false;
+	set<Funcionario>::iterator itr = funcionarios.begin();
+	set<Funcionario>::iterator itre = funcionarios.end();
+
+	cout << endl << "Funcionarios:" << endl;
+
+	while(itr != itre){
+
+		itr->imprimeInfoFuncionario();
+		cout << endl << endl;
+
+		itr++;
+	}
 }
+
+
+void PontosVenda::imprimeFuncionariosPDV(string local){
+
+	bool existe = false; //se nao houver nenhum funcionario no ponto de venda, existe continuara false
+
+	set<Funcionario>::iterator itr = funcionarios.begin();
+	set<Funcionario>::iterator itre = funcionarios.end();
+
+	cout << endl;
+
+	while(itr != itre){
+
+		if(itr->getPtVenda() == local){
+			existe = true;
+			itr->imprimeInfoFuncionario();
+			cout << endl << endl;
+		}
+
+		itr++;
+	}
+
+	if(!existe)
+		cout << "Nao existem funcionarios no ponto de venda " << local << "!" << endl << endl << endl;
+
+}
+
+
+void PontosVenda::imprimeFuncionariosFuncao(string funcao){
+
+	bool existe = false; //se nao houver nenhum funcionario com a funcao, existe continuara false
+
+	set<Funcionario>::iterator itr = funcionarios.begin();
+	set<Funcionario>::iterator itre = funcionarios.end();
+
+	cout << endl;
+
+	while(itr != itre){
+
+		if(itr->getFuncao() == funcao){
+			existe = true;
+			itr->imprimeInfoFuncionario();
+			cout << endl << endl;
+		}
+
+
+		itr++;
+	}
+
+	if(!existe)
+		cout << "Nao existem funcionarios com a funcao " << funcao << "!" << endl << endl << endl;
+}
+
+
+bool PontosVenda::removeFuncionario(string nome, unsigned salario){
+
+	//como o find apenas procura atraves do nome e do salario, a funcao e o ponto de venda nao irao ser relevantes
+	Funcionario funcARemover(nome, salario, "", "");
+
+	set<Funcionario>::iterator itr = funcionarios.find(funcARemover);
+
+
+	if(itr == funcionarios.end()) //nao existe nenhum funcionario com aquele nome e salario
+		return false;
+
+
+	funcionarios.erase(itr); //apaga o funcionario
+	return true;
+}
+
 
 //Como objetos dentro de um set nao podem ser alterados, tem que se remover o funcionario e voltar a
 //inseri-lo depois de alterar o salario, ficando este ja inserido na ordem correta
-bool PontosVenda::setSalario(Funcionario f, unsigned int salario){
 
-	if(removeFuncionario(f)){
-		f.changeSalario(salario);
-		return insertFuncionario(f);
-	}
+bool PontosVenda::setFuncSalario(string nome, unsigned salario, unsigned int novoSalario){
 
-	return false;
+	//como o find apenas procura atraves do nome e do salario, a funcao e o ponto de venda nao irao ser relevantes
+	Funcionario funcARemover(nome, salario, "", "");
+
+	set<Funcionario>::iterator itr = funcionarios.find(funcARemover);
+
+
+	if(itr == funcionarios.end()) //nao existe nenhum funcionario com aquele nome e salario
+		return false;
+
+	Funcionario func = *itr;
+	funcionarios.erase(itr); //apaga o funcionario
+
+	func.changeSalario(novoSalario); //muda o salario
+
+	funcionarios.insert(func); //insere de novo
+
+	return true;
 }
 
-bool PontosVenda::setFuncao(Funcionario f, string funcao){
 
-	if(removeFuncionario(f)){
-		f.changeFuncao(funcao);
-		return insertFuncionario(f);
-	}
+bool PontosVenda::setFuncFuncao(string nome, unsigned salario, string funcao){
 
-	return false;
+	//como o find apenas procura atraves do nome e do salario, a funcao e o ponto de venda nao irao ser relevantes
+	Funcionario funcARemover(nome, salario, "", "");
+
+	set<Funcionario>::iterator itr = funcionarios.find(funcARemover);
+
+	if(itr == funcionarios.end()) //nao existe nenhum funcionario com aquele nome e salario
+		return false;
+
+	Funcionario func = *itr;
+	funcionarios.erase(itr); //apaga o funcionario
+
+	func.changeFuncao(funcao); //muda a funcao
+
+	funcionarios.insert(func); //insere de novo
+
+	return true;
 }
 
-bool PontosVenda::setPtVenda(Funcionario f, string pt_venda){
 
-	if(removeFuncionario(f)){
-		f.changePtVenda(pt_venda);
-		return addFuncionario(f);
-	}
+bool PontosVenda::setFuncPtVenda(string nome, unsigned salario, string pt_venda){
 
-	return false;
+	//como o find apenas procura atraves do nome e do salario, a funcao e o ponto de venda nao irao ser relevantes
+	Funcionario funcARemover(nome, salario, "", "");
+
+	set<Funcionario>::iterator itr = funcionarios.find(funcARemover);
+
+	if(itr == funcionarios.end()) //nao existe nenhum funcionario com aquele nome e salario
+		return false;
+
+	Funcionario func = *itr;
+	funcionarios.erase(itr); //apaga o funcionario
+
+	func.changePtVenda(pt_venda); //muda o ponto de venda
+
+	funcionarios.insert(func); //insere de novo
+
+	return true;
 }
 
 
@@ -898,3 +989,26 @@ void PontosVenda::eliminaUtenteInat(unsigned id){
 	}
 }
 
+
+void PontosVenda::atualizaInat(){
+
+	for(unsigned i = 0; i < utentes.size(); i++){
+
+		if(utentes[i]->getDiasAteExpirar() > 0)
+			utentes[i]->avancaDia();
+		if(utentes[i]->getDiasAteExpirar() == 0)
+			adicionaUtenteInat(utentes[i]);
+	}
+}
+
+
+void PontosVenda::imprimeInfoInativos(){
+
+	cout << "LISTA DE UTENTES INATIVOS: " << endl << endl;
+	tabDispUtentesInat::iterator it = utentesInativos.begin();
+	while(it != utentesInativos.end()){
+		(*it)->imprimeInfoUtente();
+		cout << endl << endl;
+		it++;
+	}
+}

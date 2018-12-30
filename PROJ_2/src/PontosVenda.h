@@ -248,56 +248,65 @@ public:
 	Funcionario getFuncionario(string name, unsigned int salario) const;
 
 	/**
-	 * Funcao que procura um funcionario e retorna true se encontrou e false se nao encontrou; similar a funcao anterior
-	 * @param f Funcionario que se procura
-	 * @return true se encontrou o funcionario e false se nao o encontrou
-	 */
-	bool findFuncionario(Funcionario f) const;
-
-	/**
 	 * Funcao que adiciona um funcionario ao set funcionarios
 	 * @param f Funcionario que se pretende adicionar
-	 * @return true se for adicionado com sucesso e false se nao for
+	 * @return True se for adicionado com sucesso e false se nao for
 	 */
 	bool insertFuncionario(Funcionario f);
 
 	/**
-	 * Funcao que adiciona um funcionario ao set funcionarios, mas so se o ponto de venda em que trabalha existir
-	 * @param f Funcionario que se pretende adicionar
-	 * @return true se for adicionado com sucesso e false se nao for ou o ponto de venda nao existir
+	 * Metodo que remove o funcionario com um determinado nome e salario da estrutura dos funcionarios
+	 * @param nome Nome do funcionario a remover
+	 * @param salario Salario do funcionario a remover
+	 * @return True se e removido com sucesso e false se nao e (se nao existir nenhum funcionario equivalente)
 	 */
-	bool addFuncionario(Funcionario f);
+	bool removeFuncionario(string nome, unsigned salario);
 
 	/**
-	 * Funcao que remove um funcionario do set funcionarios
-	 * @param f Funcionario que se pretende remover
-	 * @return true se e removido com sucesso e false se nao e
+	 * Metodo que imprime a informacao relativa a todos os funcionarios
 	 */
-	bool removeFuncionario(Funcionario f);
+	void imprimeTodosFuncionarios();
+
+	/**
+	 * Metodo que imprime todos os funcionarios que trabalham num determinado ponto de venda
+	 * @param local Local onde se encontra o ponto de venda
+	 */
+	void imprimeFuncionariosPDV(string local);
+
+
+	/**
+	 * Metodo que imprime todos os funcionarios que desempenham uma determinada funcao
+	 * @param funcao Funcao desempenhada pelos funcionarios
+	 */
+	void imprimeFuncionariosFuncao(string funcao);
+
 
 	/**
 	 * Funcao que muda o salario de um funcionario
-	 * @param f Funcionario a alterar
-	 * @param salario Novo salario que o funcionario vai ter
-	 * @return true se alterou com sucesso e false se o funcionario nao foi encontrado
+	 * @param nome Nome do funcionario
+	 * @param salario Salario do funcionario
+	 * @param novoSalario Novo salario que o funcionario vai ter
+	 * @return True se alterou com sucesso e false se o funcionario nao foi encontrado
 	 */
-	bool setSalario(Funcionario f, unsigned int salario);
+	bool setFuncSalario(string nome, unsigned salario, unsigned int novoSalario);
 
 	/**
 	 * Funcao que muda a funcao de um funcionario
-	 * @param f Funcionario a alterar
+	 * @param nome Nome do funcionario
+	 * @param salario Salario do funcionario
 	 * @param funcao Nova funcao que o funcionario vai ter
-	 * @return true se alterou com sucesso e false se o funcionario nao foi encontrado
+	 * @return True se alterou com sucesso e false se o funcionario nao foi encontrado
 	 */
-	bool setFuncao(Funcionario f, string funcao);
+	bool setFuncFuncao(string nome, unsigned salario, string funcao);
 
 	/**
 	 * Funcao que muda o ponto de venda em que um funcionario trabalha
-	 * @param f Funcionario a alterar
+	 * @param nome Nome do funcionario
+	 * @param salario Salario do funcionario
 	 * @param pt_venda Novo ponto de venda em que o funcionario vai trabalhar
-	 * @return true se alterou com sucesso e false se o funcionario ou ponto de venda novo nao foi encontrado
+	 * @return True se alterou com sucesso e false se o funcionario nao foi encontrado
 	 */
-	bool setPtVenda(Funcionario f, string pt_venda);
+	bool setFuncPtVenda(string nome, unsigned salario, string pt_venda);
 
 
 	//----------COMPOSICAO------------
@@ -351,6 +360,18 @@ public:
 	 * @param id ID do utente a eliminar
 	 */
 	void eliminaUtenteInat(unsigned id);
+
+
+	/**
+	 * Metodo a ser chamado na funcao principal, simulando a passagem de um dia e atualizando a tabela de dispersao adequadamente.
+	 * Este metodo decrementa o numero de dias ate serem considerados inativos para todos os utentes do vetor
+	 */
+	void atualizaInat();
+
+	/**
+	 * Metodo que imprime a informacao da tabela de dispersao, relativa aos utentes inativos
+	 */
+	void imprimeInfoInativos();
 
 };
 
