@@ -12,7 +12,7 @@ using namespace std;
 /**
  * Funcao que pede ao utilizador o numero de meses necessario sem comprar bilhete para um utente ser considerado inativo
  */
-void pedeNumDiasExpiaracao(){
+void pedeNumDiasExpiracao(){
 	int valor;
 
 	do{
@@ -139,19 +139,112 @@ void compraBilhete(PontosVenda& pv){
 
 		}else if(r == 'a'){ //se for bilhete assinatura
 
-			string categoria, tipo;
-
-			//pede categoria e tipo
+			//--
+			char opcaoUtente;
 			do{
-				cout << "Categoria: "; cin >> categoria;
-				cout << "Tipo: "; cin >> tipo;
+				cout << endl << "O utente ja se encontra na base de dados? Ou e um utente novo?" << endl;
+				cout << "1 -> ja se encontra na base de dados" << endl;
+				cout << "2 -> e novo" << endl;
+				cin >> opcaoUtente;
 
-				if( ((categoria != "Z1") && (categoria != "Z2") && (categoria != "Z3") && (categoria != "Z4")) || ((tipo != "normal") && (tipo != "junior") && (tipo != "senior") && (tipo != "estudante"))){
+				if((opcaoUtente != '1') && (opcaoUtente != '2'))
+					cout << "Valor invalido." << endl;
 
-					cout << "Valor(es) invalido(s). Insira novamente." << endl << endl;
+
+			}while((opcaoUtente != '1') && (opcaoUtente != '2'));
+
+			//--
+
+			if(opcaoUtente == '1'){
+
+				string categoria, tipo;
+
+				//pede categoria e tipo
+				do{
+					cout << "Categoria: "; cin >> categoria;
+
+					if((categoria != "Z1") && (categoria != "Z2") && (categoria != "Z3") && (categoria != "Z4")){
+
+						cout << "Valor(es) invalido(s). Insira novamente." << endl << endl;
+					}
+
+				}while((categoria != "Z1") && (categoria != "Z2") && (categoria != "Z3") && (categoria != "Z4"));
+
+
+				unsigned int id;
+				cout << endl << "Indique o valor do id do utente: "; cin >> id;
+
+				string local;
+				cout << "Insira o local do ponto de venda: ";
+				cin.ignore(10, '\n');
+				getline(cin, local);
+
+				Utente* u = pv.getUtente(id); //verifica se o utente em questao existe
+
+				if(u == 0){ //se o utente nao existe...
+					cout << "Nao existe nenhum utente de id igual a " << id << "!" << endl << endl;
+					return;
 				}
 
-			}while( ((categoria != "Z1") && (categoria != "Z2") && (categoria != "Z3") && (categoria != "Z4")) || ((tipo != "normal") && (tipo != "junior") && (tipo != "senior") && (tipo != "estudante")));
+				UtenteEstudante *u1 = dynamic_cast<UtenteEstudante *>(u);
+
+
+				if(u1 != NULL)
+					tipo = "estudante"; //utente ja existente e do tipo estudante
+
+				else{
+
+					UtenteJunior *u2 = dynamic_cast<UtenteJunior *>(u);
+
+					if(u2 != NULL)
+						tipo = "junior"; //utente ja existente e do tipo junior
+
+					else{
+
+						UtenteSenior *u3 = dynamic_cast<UtenteSenior *>(u);
+
+						if(u3 != NULL)
+							tipo = "senior"; //utente ja existente e do tipo senior
+
+						else
+							tipo = "normal"; //utente ja existente e do tipo normal
+					}
+				}
+
+				BilheteAssinatura b2(categoria, tipo, u); //cria um bilhete com aquele utente
+
+				try{
+
+					//se retornou false, quer dizer que existe uma maquina nesse local
+					if(!pv.comprarBilheteAssinatura(local, b2))
+						cout << endl << "O local introduzido e uma maquina! Nao e possivel comprar bilhetes assinatura." << endl << endl;
+					else cout << endl << "---------" << endl << "Operacao efetuada com sucesso!" << endl << "---------" << endl;
+
+
+				//local nao existe
+				}catch(LocalInexistente &li){
+
+					cout << "Nao existe nenhum ponto de venda no local " << li.getLocal() << "!" << endl << endl;
+				}
+
+
+
+
+			}else if(opcaoUtente == '2'){ //utente e novo
+
+				string categoria, tipo;
+
+				//pede categoria e tipo
+				do{
+					cout << "Categoria: "; cin >> categoria;
+					cout << "Tipo: "; cin >> tipo;
+
+					if( ((categoria != "Z1") && (categoria != "Z2") && (categoria != "Z3") && (categoria != "Z4")) || ((tipo != "normal") && (tipo != "junior") && (tipo != "senior") && (tipo != "estudante"))){
+
+						cout << "Valor(es) invalido(s). Insira novamente." << endl << endl;
+					}
+
+				}while( ((categoria != "Z1") && (categoria != "Z2") && (categoria != "Z3") && (categoria != "Z4")) || ((tipo != "normal") && (tipo != "junior") && (tipo != "senior") && (tipo != "estudante")));
 
 			Utente* u;
 			cout << endl;
@@ -222,14 +315,9 @@ void compraBilhete(PontosVenda& pv){
 			}catch(LocalInexistente &li){
 
 				cout << "Nao existe nenhum ponto de venda no local " << li.getLocal() << "!" << endl << endl;
-
-				//esta excecao, na verdade, nunca ira ser lancada, pois nesta funcao e criado um novo utente, com um novo id.
-				//No entanto, achamos boa pratica adicionar o tratamento desta excecao, de qualquer das maneiras.
-			}catch(UtenteRepetido & ur){
-
-				cout << "Ja existe um assinante com id " << ur.getId() << "!" << endl << endl;
 			}
 
+			}
 
 		}else{
 
@@ -316,9 +404,9 @@ int main(){
 		cout << "z -> modificar os valores dos precos dos bilhetes, para cada zona" << endl;
 		cout << "d -> imprimir os valores dos precos dos bilhetes (em euros), para cada zona" << endl;
 		cout << "p -> imprimir a informacao especifica a um ponto de venda (maquina ou loja), a especificar pelo seu local" << endl;
-		cout << "u -> imprimir toda a informacao relativa aos utentes que possuem um bilhete assinatura" << endl;
+		cout << "u -> imprimir toda a informacao relativa aos utentes que possuem bilhetes assinatura" << endl;
 		cout << "c -> comprar/adicionar um bilhete qualquer, num determinado ponto de venda" << endl;
-		cout << "a -> apagar uma assinatura do sistema, eliminando o utente e o seu bilhete assinatura" << endl;
+		cout << "a -> apagar um utente da base de dados, removendo-o a si e a todos os bilhetes associados" << endl;
 		cout << "r -> remover um ponto de venda qualquer do sistema (e consequentemente todos os seus bilhetes), especificado pelo seu local" << endl;
 		cout << "n -> adicionar um novo ponto de venda (maquina ou loja) ao sistema" << endl << endl;
 
@@ -507,7 +595,7 @@ int main(){
 
 
 	//---------------
-	//escolheu-se a eliminacao de uma assinatura qualquer (apaga-se o utente e o bilhete associado a ele)
+	//escolheu-se a eliminacao de um utente qualquer (apaga-se o utente e os bilhetes associados a ele)
 	}else if(sndOp == 'a'){
 
 
@@ -520,15 +608,15 @@ int main(){
 			//tenta eliminar a assinatura (excecao e lancada se nao existe nenhum utente com o id)
 			try{
 
-				pv.eliminaAssinatura(id);
+				pv.eliminaUtente(id);
 				cout << endl << "---------" << endl << "Operacao efetuada com sucesso!" << endl << "---------" << endl;
 
 			}catch(UtenteInexistente& ui){
 
 				cout << "Nao existe nenhum utente com id " << ui.getId() << "!" << endl << endl;
 
-			//esta excecao nunca ira ser lancada (em principio) pois cada utente esta obrigatoriamente associado
-			//a um, e um so, bilhete assinatura. Mais uma vez, consideramos que seria boa pratica inserir o
+			//esta excecao nunca ira ser lancada (em principio) pois cada utente esta obrigatoriamente associado a
+			//pelo menos um bilhete assinatura. Mais uma vez, consideramos que seria boa pratica inserir o
 			//tratamento da excecao, de qualquer das maneiras.
 			}catch(BilheteInexistente& bi){
 

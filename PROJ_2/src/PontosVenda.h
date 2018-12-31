@@ -58,7 +58,7 @@ private:
 	vector<Maquina*> ptsVenda;
 
 	/**
-	 * Vetor com todos os utentes que possuem um bilhete assinatura
+	 * Vetor com todos os utentes da base de dados
 	 */
 	vector<Utente*> utentes;
 
@@ -106,7 +106,7 @@ public:
 	void imprimeSoLojas() const;
 
 	/**
-	 * Metodo que imprime a informacao relativa aos utentes que possuem um bilhete assinatura
+	 * Metodo que imprime a informacao relativa aos utentes da base de dados
 	 */
 	void imprimeAssinantes() const;
 
@@ -133,13 +133,13 @@ public:
 	/**
 	 * Metodo que procura por um determinado utente, dado o seu id, e o retorna, se for encontrado
 	 * @param id Id do utente que se quer encontrar
-	 * @return Utente que se queria encontrar
+	 * @return Utente que se queria encontrar (retorna NULL se nao existe)
 	 */
-	Utente* getUtente(unsigned int id) const;
+	Utente* getUtente(unsigned int id);
 
 
 	/**
-	 * Retorna o vetor com todos os utentes que possuem um bilhete assinatura
+	 * Retorna o vetor com todos os utentes que possuem bilhetes assinatura
 	 * @return Vetor com os utentes
 	 */
 	vector<Utente*> getUtentesAssinatura() const;
@@ -153,7 +153,7 @@ public:
 	void comprarBilheteOcasional(string local, BilheteOcasional& bo);
 
 	/**
-	 * Metodo que "compra" um bilhete assinatura numa loja especificada pelo seu local (lanca uma excecao se nao existir nenhum PDV no local)
+	 * Metodo que "compra" um bilhete assinatura numa loja especificada pelo seu local (lanca uma excecao se nao existir nenhum PDV no local). Adiciona tambem o utente ao vetor Utentes, se se tratar de um utente novo; se nao for novo, retira-o da tabela de dispersao
 	 * @param local Local da loja
 	 * @param ba Bilhete que se pretende comprar
 	 * @return True se conseguiu comprar, false caso contrario (PDV e uma maquina)
@@ -176,13 +176,13 @@ public:
 	int findPDV(string local) const;
 
 	/**
-	 * Metodo que elimina um utente da base de dados, assim como a informacao relativa ao seu bilhete de assinatura
+	 * Metodo que elimina um utente da base de dados, assim como a informacao relativa a todos os seus bilhetes de assinatura
 	 * @param id Id do utente que se pretende eliminar
 	 */
-	void eliminaAssinatura(unsigned int id);
+	void eliminaUtente(unsigned int id);
 
 	/**
-	 * Metodo que elimina uma loja ou maquina, com base no local onde se encontra
+	 * Metodo que elimina uma loja ou maquina, com base no local onde se encontra. Ao apagar os bilhetes de uma loja, se um determinado utente nao tiver mais bilhetes noutras lojas, apaga-o tambem da base de dados
 	 * @param local Local onde o ponto de venda se encontra
 	 */
 	void eliminaPDV(string local);

@@ -116,7 +116,7 @@ public:
 		vector<BilheteAssinatura> getBilhetesA() const;
 
 		/**
-		 * Metodo que devolve a posicao do bilhete assinatura cujo utente tem um determinado id
+		 * Metodo que devolve a posicao do primeiro bilhete assinatura cujo utente tem um determinado id
 		 * @param id Id do utente que se quer encontrar
 		 * @return Indice do utente (-1 se nao existir)
 		 */
@@ -134,9 +134,9 @@ public:
 		void addBilheteA(BilheteAssinatura& bilhete);
 
 		/**
-		 * Metodo que elimina o bilhete assinatura do vetor bilhetesA com base no id do utente
-		 * @param id Id do utente cujo bilhete assinatura sera eliminado
-		 * @return True se conseguiu apagar o bilhete, false caso contrario
+		 * Metodo que elimina todos os bilhetes assinatura do vetor bilhetesA com base no id do utente
+		 * @param id Id do utente cujos bilhetes assinatura serao eliminados
+		 * @return True se apagou pelo menos um bilhete, false se nao apagou nenhum
 		 */
 		bool eraseBilheteA(unsigned int id);
 

@@ -54,6 +54,14 @@ public:
 	Utente(string nome, int numDias): nome(nome), id(++nextId), diasAteExpirar(numDias){}
 
 	/**
+	 * Terceiro construtor da classe
+	 * @param nome Nome do utente
+	 * @param id Id do utente
+	 * @param numDias Numero de dias ate ficar inativo
+	 */
+	Utente(string nome, unsigned int id, int numDias): nome(nome), id(id), diasAteExpirar(numDias){}
+
+	/**
 	 * Destrutor virtual da classe (apenas declarado)
 	 */
 	virtual ~Utente(){}
@@ -76,10 +84,27 @@ public:
 	unsigned int getId() const;
 
 	/**
+	 * Metodo que retorna a variavel static nextId
+	 * @return Variavel static que indica o ultimo id utilizado
+	 */
+	static unsigned int getNextId();
+
+	/**
+	 * Metodo que atribui um determinado valor a variavel static nextId
+	 * @param valor Valor a ser atribuido
+	 */
+	static void setNextId(unsigned int valor);
+
+	/**
 	 * Metodo que retorna o numero de dias que um determinado utente pode ficar sem comprar bilhete, ate ser considerado inativo
 	 * @return Numero de dias
 	 */
 	int getDiasAteExpirar() const;
+
+	/**
+	 * Metodo que da reset ao numero de dias que o utente tem ate ficar inativo, voltando ao seu valor maximo
+	 */
+	void resetDiasAteExpirar();
 
 	/**
 	 * Metodo que simula o avanco de um dia; atualiza o numero de dias que falta para o utente ser considerado inativo
@@ -147,6 +172,17 @@ public:
 	 * @param escola Nome da escola do utente
 	 */
 	UtenteEstudante(string nome, int numDias, int idade, string cc, string escola): Utente(nome, numDias), idade(idade),cc(cc), escola(escola){}
+
+	/**
+	 * Terceiro construtor da classe
+	 * @param nome Nome do utente
+	 * @param id Id do utente
+	 * @param numDias Numero de dias ate expirar
+	 * @param idade Idade do utente
+	 * @param cc Numero do cartao de cidadao do utente
+	 * @param escola Nome da escola do utente
+	 */
+	UtenteEstudante(string nome, unsigned int id, int numDias, int idade, string cc, string escola): Utente(nome, id, numDias), idade(idade), cc(cc), escola(escola){}
 
 	/**
 	 * Destrutor virtual da classe (apenas declarado)
@@ -219,6 +255,17 @@ public:
 	UtenteSenior(string nome, int numDias, int idade, string cc): Utente(nome, numDias), idade(idade), cc(cc){}
 
 	/**
+	 * Terceiro construtor da classe
+	 * @param nome Nome do utente
+	 * @param id Id do utente
+	 * @param numDias Numero de dias ate expirar
+	 * @param idade Idade do utente
+	 * @param cc Numero de cartao de cidadao do utente
+	 */
+	UtenteSenior(string nome, unsigned int id, int numDias, int idade, string cc): Utente(nome, id, numDias), idade(idade), cc(cc){}
+
+
+	/**
 	 * Destrutor virtual da classe (apenas declarado)
 	 */
 	~UtenteSenior(){}
@@ -282,6 +329,16 @@ public:
 	 * @param cc Numero de cartao de cidadao do utente
 	 */
 	UtenteJunior(string nome, int numDias, int idade, string cc): Utente(nome, numDias), idade(idade), cc(cc){}
+
+	/**
+	 * Terceiro construtor da classe
+	 * @param nome Nome do utente
+	 * @param id Id do utente
+	 * @param numDias Numero de dias ate expirar
+	 * @param idade Idade do utente
+	 * @param cc Numero de cartao de cidadao do utente
+	 */
+	UtenteJunior(string nome, unsigned int id, int numDias, int idade, string cc): Utente(nome, id, numDias), idade(idade), cc(cc){}
 
 	/**
 	 * Destrutor virtual da classe (apenas declarado)

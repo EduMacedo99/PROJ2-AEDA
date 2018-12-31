@@ -44,14 +44,14 @@ string replaceSpacesWithUnderscores(string s){
 
 ostream& operator<<(ostream &os, const UtenteSenior&u){
 
-	os << replaceSpacesWithUnderscores(u.nome) << endl << u.diasAteExpirar << endl << u.idade << endl << u.cc;
+	os << replaceSpacesWithUnderscores(u.nome) << endl << u.id << endl << u.diasAteExpirar << endl << u.idade << endl << u.cc;
 	return os;
 
 }
 
 ostream& operator<<(ostream &os, const UtenteJunior&u){
 
-	os << replaceSpacesWithUnderscores(u.nome) << endl << u.diasAteExpirar << endl << u.idade << endl << u.cc;
+	os << replaceSpacesWithUnderscores(u.nome) << endl << u.id << endl << u.diasAteExpirar << endl << u.idade << endl << u.cc;
 	return os;
 
 }
@@ -59,7 +59,7 @@ ostream& operator<<(ostream &os, const UtenteJunior&u){
 
 ostream& operator<<(ostream &os, const UtenteEstudante&u){
 
-	os << replaceSpacesWithUnderscores(u.nome) << endl << u.diasAteExpirar << endl << u.idade << endl << u.cc << endl << replaceSpacesWithUnderscores(u.escola);
+	os << replaceSpacesWithUnderscores(u.nome) << endl << u.id << endl << u.diasAteExpirar << endl << u.idade << endl << u.cc << endl << replaceSpacesWithUnderscores(u.escola);
 	return os;
 
 }
@@ -67,14 +67,29 @@ ostream& operator<<(ostream &os, const UtenteEstudante&u){
 
 ostream& operator<<(ostream &os, const Utente&u){
 
-	os << replaceSpacesWithUnderscores(u.nome) << u.diasAteExpirar << endl;
+	os << replaceSpacesWithUnderscores(u.nome) << endl << u.id << endl << u.diasAteExpirar;
 	return os;
 
 }
 
 
+unsigned int Utente::getNextId(){
+	return nextId;
+}
+
+
+void Utente::setNextId(unsigned int valor){
+	nextId = valor;
+}
+
+
 void Utente::avancaDia(){
 	diasAteExpirar--;
+}
+
+
+void Utente::resetDiasAteExpirar(){
+	diasAteExpirar = numDiasExpiracao;
 }
 
 

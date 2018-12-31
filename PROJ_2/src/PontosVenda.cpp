@@ -1,4 +1,5 @@
 #include <fstream>
+#include <algorithm>
 #include "PontosVenda.h"
 
 using namespace std;
@@ -144,6 +145,13 @@ int PontosVenda::load_file(string ficheiro){
 
 	Bilhete::setPrecosZona(precosZona);
 
+
+
+	unsigned int nextId;
+	f >> nextId; //extrai o valor para a variavel nextId
+	Utente::setNextId(nextId);
+
+
 	string linha;
 
 	while(!f.eof()){
@@ -214,18 +222,34 @@ int PontosVenda::load_file(string ficheiro){
 					if(tipo == "normal"){
 
 						string nome;
+						unsigned int id;
 						int numDias;
 
 						f >> nome; //extrai o nome do utente
 						nome = replaceUnderscoresWithSpaces(nome);
+
+						f >> id; //extrai o id do utente
+
 						f >> numDias; //extrai o numero de dias ate ficar inativo
 
-						Utente* u = new Utente(nome, numDias); //cria um novo utente normal
 
-						BilheteAssinatura b3(categoria, preco, tipo, u); //cria um bilhete, associado a esse utente
-						l->addBilheteA(b3);
-						this->addUtente(u);
-						//adiciona o bilhete a loja, e adiciona o utente ao vetor de utentes
+						Utente* u = getUtente(id); //verifica se o utente ja existe
+
+						if(u != 0){ //se o utente esta presente
+
+							BilheteAssinatura b3(categoria, preco, tipo, u); //cria bilhete
+							l->addBilheteA(b3); //adiciona bilhete
+						}
+
+						else{ //se utente nao esta presente
+
+							u = new Utente(nome, id, numDias); //cria um novo utente normal
+
+							BilheteAssinatura b3(categoria, preco, tipo, u); //cria um bilhete, associado a esse utente
+							l->addBilheteA(b3);
+							this->addUtente(u);
+							//adiciona o bilhete a loja, e adiciona o utente ao vetor de utentes
+						}
 
 
 					} //se bilhete for do tipo junior
@@ -234,17 +258,29 @@ int PontosVenda::load_file(string ficheiro){
 						string nome, cc;
 						int numDias;
 						int idade;
+						unsigned int id;
 
-						f >> nome >> numDias >> idade >> cc; //extrai nome, numero de dias, idade e CC do utente
+						f >> nome >> id >> numDias >> idade >> cc; //extrai nome, id, numero de dias, idade e CC do utente
 
 						nome = replaceUnderscoresWithSpaces(nome);
 
-						Utente* u = new UtenteJunior(nome, numDias, idade, cc); //cria um novo utente junior
+						Utente* u = getUtente(id); //verifica se o utente ja existe
 
-						BilheteAssinatura b4(categoria, preco, tipo, u); //cria um bilhete, associado a esse utente
-						l->addBilheteA(b4);
-						this->addUtente(u);
-						//adiciona o bilhete a loja, e adiciona o utente ao vetor de utentes
+						if(u != 0){ //se o utente esta presente
+
+							BilheteAssinatura b4(categoria, preco, tipo, u); //cria bilhete
+							l->addBilheteA(b4); //adiciona bilhete
+						}
+
+						else{ //se utente nao esta presente
+
+							u = new UtenteJunior(nome, id, numDias, idade, cc); //cria um novo utente junior
+
+							BilheteAssinatura b4(categoria, preco, tipo, u); //cria um bilhete, associado a esse utente
+							l->addBilheteA(b4);
+							this->addUtente(u);
+							//adiciona o bilhete a loja, e adiciona o utente ao vetor de utentes
+						}
 
 
 					//se bilhete for do tipo senior
@@ -253,16 +289,29 @@ int PontosVenda::load_file(string ficheiro){
 						string nome, cc;
 						int numDias;
 						int idade;
+						unsigned int id;
 
-						f >> nome >> numDias >> idade >> cc; //extrai nome, numero de dias, idade e CC do utente
+						f >> nome >> id >> numDias >> idade >> cc; //extrai nome, id, numero de dias, idade e CC do utente
 
 						nome = replaceUnderscoresWithSpaces(nome);
 
-						Utente* u = new UtenteSenior(nome, numDias, idade, cc); //cria um novo utente senior
-						BilheteAssinatura b5(categoria, preco, tipo, u); //cria um bilhete, associado a esse utente
-						l->addBilheteA(b5);
-						this->addUtente(u);
-						//adiciona o bilhete a loja, e adiciona o utente ao vetor de utentes
+						Utente* u = getUtente(id); //verifica se o utente ja existe
+
+						if(u != 0){ //se o utente esta presente
+
+							BilheteAssinatura b5(categoria, preco, tipo, u); //cria bilhete
+							l->addBilheteA(b5); //adiciona bilhete
+						}
+
+						else{ //se utente nao esta presente
+
+							u = new UtenteSenior(nome, id, numDias, idade, cc); //cria um novo utente senior
+
+							BilheteAssinatura b5(categoria, preco, tipo, u); //cria um bilhete, associado a esse utente
+							l->addBilheteA(b5);
+							this->addUtente(u);
+							//adiciona o bilhete a loja, e adiciona o utente ao vetor de utentes
+						}
 
 
 					//se bilhete for do tipo estudante
@@ -271,17 +320,31 @@ int PontosVenda::load_file(string ficheiro){
 						string nome, cc, escola;
 						int numDias;
 						int idade;
+						unsigned int id;
 
-						f >> nome >> numDias >> idade >> cc >> escola; //extrai nome, numero de dias, idade, CC e escola do utente
+						f >> nome >> id >> numDias >> idade >> cc >> escola; //extrai nome, numero de dias, idade, CC e escola do utente
 
 						nome = replaceUnderscoresWithSpaces(nome);
 						escola = replaceUnderscoresWithSpaces(escola);
 
-						Utente* u = new UtenteEstudante(nome, numDias, idade, cc, escola); //cria um novo utente senior
-						BilheteAssinatura b6(categoria, preco, tipo, u); //cria um bilhete, associado a esse utente
-						l->addBilheteA(b6);
-						this->addUtente(u);
-						//adiciona o bilhete a loja, e adiciona o utente ao vetor de utentes
+						Utente* u = getUtente(id); //verifica se o utente ja existe
+
+						if(u != 0){ //se o utente esta presente
+
+							BilheteAssinatura b6(categoria, preco, tipo, u); //cria bilhete
+							l->addBilheteA(b6); //adiciona bilhete
+						}
+
+						else{ //se utente nao esta presente
+
+							u = new UtenteEstudante(nome, id, numDias, idade, cc, escola); //cria um novo utente estudante
+
+							BilheteAssinatura b6(categoria, preco, tipo, u); //cria um bilhete, associado a esse utente
+							l->addBilheteA(b6);
+							this->addUtente(u);
+							//adiciona o bilhete a loja, e adiciona o utente ao vetor de utentes
+						}
+
 
 					}else{
 					}
@@ -316,11 +379,11 @@ int PontosVenda::save_file(string ficheiro){
 	//insere no ficheiro os precos relativos as zonas e aos tipos de bilhete
 	for(unsigned i = 0; i < precosZona.size(); i++){
 
-		f << precosZona.at(i).at(0) << " " << precosZona.at(i).at(1) << " " << precosZona.at(i).at(2);
-
-		if(i < (precosZona.size() - 1))
-			f << endl;
+		f << precosZona.at(i).at(0) << " " << precosZona.at(i).at(1) << " " << precosZona.at(i).at(2) << endl;
 	}
+
+
+	f << Utente::getNextId(); //insere no ficheiro o valor da variavel nextId, da classe Utente
 
 
 	for(unsigned i = 0; i < ptsVenda.size(); i++){
@@ -416,7 +479,7 @@ int PontosVenda::save_file(string ficheiro){
 
 
 
-Utente* PontosVenda::getUtente(unsigned int id) const{
+Utente* PontosVenda::getUtente(unsigned int id){
 
 	for(unsigned i = 0; i < utentes.size(); i++){
 
@@ -425,7 +488,8 @@ Utente* PontosVenda::getUtente(unsigned int id) const{
 
 	}
 
-	throw UtenteInexistente(id);
+	//throw UtenteInexistente(id);
+	return 0;
 }
 
 
@@ -445,7 +509,7 @@ void PontosVenda::comprarBilheteOcasional(string local, BilheteOcasional& bo){
 
 bool PontosVenda::comprarBilheteAssinatura(string local, BilheteAssinatura& ba){
 
-	for(unsigned i = 0; i < utentes.size(); i++){
+	/*for(unsigned i = 0; i < utentes.size(); i++){
 
 		if(utentes.at(i)->getId() == ba.getAssinante()->getId())
 			throw UtenteRepetido(ba.getAssinante()->getId());
@@ -465,7 +529,37 @@ bool PontosVenda::comprarBilheteAssinatura(string local, BilheteAssinatura& ba){
 
 		return false;
 	}
-	else throw LocalInexistente(local);
+	else throw LocalInexistente(local);*/
+
+
+		if(findLoja(local) != -1){
+
+			Loja* l = dynamic_cast<Loja*>(ptsVenda[findLoja(local)]);
+			if(l != NULL){
+				l->addBilheteA(ba);
+
+				Utente* u = getUtente(ba.getAssinante()->getId()); //verifica se o utente ja existe
+
+				if(u != 0){ //se o utente ja existe
+
+					eliminaUtenteInat(u->getId()); //se ele estiver na tabela de dispersao, e eliminado
+
+					u->resetDiasAteExpirar(); //da reset ao numero de dias que o utente tem ate ser considerado inativo
+
+				}
+				else{ //se o utente e novo, ou seja, ainda nao esta presente no vetor de utentes
+
+					addUtente(ba.getAssinante()); //adiciona o utente ao vetor, assumindo que o numero de dias que este tem ate se tornar inativo ja se encontra no maximo
+				}
+
+				return true;
+				}
+		}
+		else if(findPDV(local) != -1){ //verifica se ha uma maquina nesse local
+
+			return false;
+		}
+		else throw LocalInexistente(local);
 
 }
 
@@ -494,8 +588,8 @@ int PontosVenda::findLoja(string local) const{
 
 
 
-void PontosVenda::eliminaAssinatura(unsigned int id){
-	bool bexiste = false;
+void PontosVenda::eliminaUtente(unsigned int id){
+	/*bool bexiste = false;
 	bool existe = false;
 	for(unsigned i = 0; i < utentes.size() ; i++){
 		if(utentes[i]->getId() == id){
@@ -520,15 +614,50 @@ void PontosVenda::eliminaAssinatura(unsigned int id){
 	else throw UtenteInexistente(id);
 
 	if(!bexiste)
-		throw BilheteInexistente();
+		throw BilheteInexistente();*/
 
+
+	Utente* u = getUtente(id); //verifica se o utente existe
+
+	if(u == 0)
+		throw UtenteInexistente(id); //utente nao existe no vetor; lanca excecao
+
+
+	for(unsigned i = 0; i < utentes.size() ; i++){
+		if(utentes[i]->getId() == id){
+			utentes.erase(utentes.begin() + i); //apaga o utente do vetor
+		}
+	}
+
+
+	eliminaUtenteInat(id); //elimina o utente da tabela de dispersao, se este se encontrar la
+
+
+	bool existeBilhete = false;
+
+	for(unsigned i = 0; i < ptsVenda.size(); i++){
+
+		if(ptsVenda.at(i)->eLoja()){ //se for uma loja
+
+			Loja* l = dynamic_cast<Loja*>(ptsVenda.at(i));
+
+			if(l->eraseBilheteA(id))
+				existeBilhete = true; //o utente tinha pelo menos um bilhete
+
+		}
+
+	}
+
+
+	if(!existeBilhete)
+		throw BilheteInexistente(); //o utente nao tinha nenhum bilhete de assinatura; lanca excecao
 
 }
 
 
 
 void PontosVenda::eliminaPDV(string local){
-	int pos;
+	/*int pos;
 	pos = findPDV(local);
 	if(pos != -1){
 
@@ -548,9 +677,64 @@ void PontosVenda::eliminaPDV(string local){
 			}
 			ptsVenda.erase(ptsVenda.begin() + pos);
 }
+	else throw LocalInexistente(local);*/
+
+
+	int pos;
+	pos = findPDV(local);
+	if(pos != -1){
+
+		if(ptsVenda[pos]->eLoja()){
+
+			Loja* l = dynamic_cast<Loja*>(ptsVenda.at(pos));
+
+			if(l != NULL){
+
+				vector<Utente*> assinantesDaLoja = l->getAssinantes(); //vetor com os utentes que tinham bilhetes nessa loja
+
+
+
+				for(unsigned i = 0; i < assinantesDaLoja.size(); i++){
+
+					bool bilhetesNoutraLoja = false; //bool que ira indicar se o utente possui bilhetes noutra(s) loja(s)
+
+					for(unsigned j = 0; j < ptsVenda.size(); j++){
+
+						if(j == pos) //se estivermos no ponto de venda que iremos apagar, passar a frente
+							continue;
+
+						if(ptsVenda.at(j)->eLoja()){
+
+							Loja* l = dynamic_cast<Loja*>(ptsVenda.at(j));
+
+							if(l != NULL){
+
+								if(l->findUtente(assinantesDaLoja.at(i)->getId()) != -1) //se o utente tem bilhetes nesta loja...
+									bilhetesNoutraLoja = true;
+							}
+
+						}
+					}
+
+					if(!bilhetesNoutraLoja){ //o utente nao tem bilhetes noutras lojas
+
+						for(unsigned k = 0; k < utentes.size(); k++){
+
+							if(utentes.at(k)->getId() == assinantesDaLoja.at(i)->getId()){
+
+								eliminaUtenteInat(utentes.at(k)->getId()); //elimina o utente da tabela (se ele la estiver)
+								utentes.erase(utentes.begin() + k); //ao encontrar o utente certo, apaga-o
+							}
+						}
+					}
+
+				}
+			}
+		}
+		ptsVenda.erase(ptsVenda.begin() + pos);
+	}
 	else throw LocalInexistente(local);
 }
-
 
 
 
@@ -591,10 +775,20 @@ void PontosVenda::addPDV(string local, bool loja){
 
 void PontosVenda::addUtente(Utente* u){
 
-	for(unsigned i = 0; i < utentes.size(); i++){
+	/*for(unsigned i = 0; i < utentes.size(); i++){
 
 		if(utentes.at(i)->getId() == u->getId())	//nao deixa haver dois utentes com o mesmo id!!
 			throw UtenteRepetido(u->getId());
+
+	}
+
+	utentes.push_back(u);*/
+
+
+	for(unsigned i = 0; i < utentes.size(); i++){
+
+		if(utentes.at(i)->getId() == u->getId())	//nao deixa haver dois utentes com o mesmo id!!
+			return;
 
 	}
 

@@ -26,6 +26,15 @@ void Composicao::fazManutencao(){
 }
 
 
+int Composicao::getCompNextId(){
+	return compNextId;
+}
+
+void Composicao::setCompNextId(int valor){
+	compNextId = valor;
+}
+
+
 bool Composicao::operator<(Composicao c) const{
 	return proxManut > c.getProxManut();
 }

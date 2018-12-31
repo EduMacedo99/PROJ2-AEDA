@@ -72,6 +72,18 @@ public:
 	bool getAvaria() const;
 
 	/**
+	 * Metodo que retorna o valor da variavel static compNextId
+	 * @return Valor da variavel que indica o ultimo id utilizado para as composicoes
+	 */
+	static int getCompNextId();
+
+	/**
+	 * Metodo que atribui um valor a variavel static compNextId
+	 * @param valor Valor a ser atribuido
+	 */
+	static void setCompNextId(int valor);
+
+	/**
 	 * Metodo que simula a manutencao de uma composicao, marcando uma nova data de manutencao, e resolvendo a avaria se ela existir
 	 */
 	void fazManutencao();

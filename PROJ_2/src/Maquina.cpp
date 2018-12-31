@@ -1,7 +1,8 @@
 #include "Maquina.h"
 #include "Utente.h"
 #include <iostream>
- using namespace std;
+#include <algorithm>
+using namespace std;
 
 
 string Maquina::getLocal() const{
@@ -111,8 +112,19 @@ vector<Utente*> Loja::getAssinantes() const{
 
 	vector<Utente*> utentes;
 
-	for(unsigned i = 0; i < bilhetesA.size(); i++)
-		utentes.push_back(bilhetesA.at(i).getAssinante());
+	for(unsigned i = 0; i < bilhetesA.size(); i++){
+
+		bool jaExiste = false;
+
+		for(unsigned j = 0; j < utentes.size(); j++){
+
+			if(utentes.at(j)->getId() == bilhetesA.at(i).getAssinante()->getId())
+				jaExiste = true;
+		}
+
+		if(!jaExiste)
+			utentes.push_back(bilhetesA.at(i).getAssinante());
+	}
 
 	return utentes;
 }
@@ -120,26 +132,20 @@ vector<Utente*> Loja::getAssinantes() const{
 
 
 bool Loja::eraseBilheteA(unsigned int id){
-	int pos = findUtente(id);
-	if(pos != -1){
-		bilhetesA.erase(bilhetesA.begin() + pos);
-		return true;
-	}
-	return false;
 
-	/*bool encontrou = false;
+	bool encontrou = false;
 
-		while(true){
-			int pos = findUtente(id);
+	while(true){
+		int pos = findUtente(id);
 
-			if(pos != -1){
-				bilhetesA.erase(bilhetesA.begin() + pos);
-				encontrou = true;
-			}
-			else break;
+		if(pos != -1){
+			encontrou = true;
+			bilhetesA.erase(bilhetesA.begin() + pos);
 		}
+		else break;
+	}
 
-		return encontrou;*/
+	return encontrou;
 }
 
 
