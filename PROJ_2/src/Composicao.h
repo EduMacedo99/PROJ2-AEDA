@@ -54,6 +54,14 @@ public:
 	Composicao(int prox_manut, bool avaria): proxManut(prox_manut), avaria(avaria), idC(++compNextId){}
 
 	/**
+	 * Segundo construtor da classe (utilizado na operacao de extracao de informacao de ficheiros de texto)
+	 * @param prox_manut Dias que faltam ate a proxima manutencao da composicao
+	 * @param avaria Se a maquina esta avariada ou nao
+	 * @param id ID da composicao
+	 */
+	Composicao(int prox_manut, bool avaria, int id): proxManut(prox_manut), avaria(avaria), idC(id){}
+
+	/**
 	 * Metodo que retorna o numero de id de uma dada composicao
 	 * @return Numero de id
 	 */

@@ -343,17 +343,18 @@ public:
 	void avancaDiaComp();
 
 	/**
-	 * Metodo para ser chamado na funcao principal; atualiza todas as composicoes, avancando um dia e realizando as manutencoes necessarias
+	 * Atualiza todas as composicoes, avancando um dia e realizando as manutencoes necessarias
 	 */
 	void atualizaComp();
 
 	//----------UTENTES INATIVOS------------
 
 	/**
-	 * Metodo que adiciona um utente inativo a tabela de dispersao (se o utente ja se encontra la, nao faz nada)
+	 * Metodo que adiciona um utente inativo a tabela de dispersao (se ele ainda nao estiver la)
 	 * @param u Utente a ser adicionado
+	 * @return True se o utente foi adicionado, e false caso contrario (utente ja se encontrava la)
 	 */
-	void adicionaUtenteInat(Utente* u);
+	bool adicionaUtenteInat(Utente* u);
 
 	/**
 	 * Metodo que elimina um dado utente da tabela de dispersao, dado pelo seu id (se nao existe nenhum utente com esse ID, nao faz nada)
@@ -361,10 +362,8 @@ public:
 	 */
 	void eliminaUtenteInat(unsigned id);
 
-
 	/**
-	 * Metodo a ser chamado na funcao principal, simulando a passagem de um dia e atualizando a tabela de dispersao adequadamente.
-	 * Este metodo decrementa o numero de dias ate serem considerados inativos para todos os utentes do vetor
+	 * Simula a passagem de um dia e atualizando a tabela de dispersao adequadamente. Este metodo aumenta o numero de dias inativos para todos os utentes
 	 */
 	void atualizaInat();
 
@@ -372,6 +371,52 @@ public:
 	 * Metodo que imprime a informacao da tabela de dispersao, relativa aos utentes inativos
 	 */
 	void imprimeInfoInativos();
+
+	/**
+	 * Metodo que imprime a informacao sobre utentes inativos que se encontram inativos por mais de x meses
+	 * @param mes Numero de meses
+	 */
+	void imprimeInfoInativosMes(int mes);
+
+	/**
+	 * Metodo que da reset ao numero de dias inativo do utente de id especifico, se ele existir; tambem o retira da tabela de dispersao, se este estiver la. Lanca uma excecao se o utente nao existir
+	 * @param id Id do utente
+	 */
+	void resetUtenteInativo(unsigned id);
+
+	/**
+	 * Metodo que remove os utentes inativos que estao inativos por menos de x dias; para ser invocado quando se modifica o valor minimo de meses para um utente ficar inativo, de modo a que a tabela fique de acordo com esse valor
+	 * @param dias Numero de dias
+	 */
+	void removeUtentesInat(unsigned dias);
+
+
+	//----------GERAL------------
+
+	/**
+	 * Metodo que simula o avanco de um dia tanto para os utentes como para as composicoes, atualizando cada um deles
+	 */
+	void avancaDiaTudo();
+
+	/**
+	 * Metodo que simula o avanco de um mes tanto para os utentes como para as composicoes (considera-se que um mes tem 30 dias)
+	 */
+	void avancaMesTudo();
+
+	/**
+	 * Metodo que extrai a informacao de um ficheiro relativo a segunda parte do trabalho, atualizando a informacao dos utentes inativos, funcionarios, e composicoes
+	 * @param ficheiro Nome do ficheiro onde esta guardada a informacao
+	 * @return Retorna 0 se executou sem problemas, 1 se ocorreu um erro (ex: ficheiro nao existente)
+	 */
+	int load_file2(string ficheiro);
+
+	/**
+	 * Metodo que guarda toda a informacao relativa a segunda parte do trabalho num ficheiro de texto, para uso futuro
+	 * @param ficheiro Nome do ficheiro onde vai ser guardada a informacao
+	 * @return Retorna 0 se executou sem problemas, 1 se ocorreu um erro
+	 */
+	int save_file2(string ficheiro);
+
 
 };
 

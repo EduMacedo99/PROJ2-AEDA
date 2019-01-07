@@ -28,9 +28,9 @@ protected:
 	static unsigned int nextId;
 
 	/**
-	 * Variavel que indica o numero de dias que um utente tem ate ser considerado inativo
+	 * Variavel que indica o numero de dias que um utente esta inativo
 	 */
-	int diasAteExpirar;
+	int diasInativo;
 
 	/**
 	 * Variavel static que indica o numero de dias que um utente pode ficar sem comprar um bilhete, ate ser considerado inativo
@@ -41,25 +41,25 @@ protected:
 public:
 
 	/**
-	 * Construtor da classe (cria um utente novo, logo o numero de dias ate expirar e o maximo)
+	 * Construtor da classe (cria um utente novo, logo o numero de dias inativo e o maximo)
 	 * @param nome Nome do utente
 	 */
-	Utente(string nome): nome(nome), id(++nextId), diasAteExpirar(numDiasExpiracao) {}
+	Utente(string nome): nome(nome), id(++nextId), diasInativo(0) {}
 
 	/**
 	 * Outro construtor da classe
 	 * @param nome Nome do utente
-	 * @param numDias Numero de dias ate ficar inativo
+	 * @param numDias Numero de dias inativo
 	 */
-	Utente(string nome, int numDias): nome(nome), id(++nextId), diasAteExpirar(numDias){}
+	Utente(string nome, int numDias): nome(nome), id(++nextId), diasInativo(numDias){}
 
 	/**
 	 * Terceiro construtor da classe
 	 * @param nome Nome do utente
 	 * @param id Id do utente
-	 * @param numDias Numero de dias ate ficar inativo
+	 * @param numDias Numero de dias inativo
 	 */
-	Utente(string nome, unsigned int id, int numDias): nome(nome), id(id), diasAteExpirar(numDias){}
+	Utente(string nome, unsigned int id, int numDias): nome(nome), id(id), diasInativo(numDias){}
 
 	/**
 	 * Destrutor virtual da classe (apenas declarado)
@@ -96,18 +96,18 @@ public:
 	static void setNextId(unsigned int valor);
 
 	/**
-	 * Metodo que retorna o numero de dias que um determinado utente pode ficar sem comprar bilhete, ate ser considerado inativo
+	 * Metodo que retorna o numero de dias que um determinado utente esta inativo
 	 * @return Numero de dias
 	 */
-	int getDiasAteExpirar() const;
+	int getDiasInativo() const;
 
 	/**
-	 * Metodo que da reset ao numero de dias que o utente tem ate ficar inativo, voltando ao seu valor maximo
+	 * Metodo que da reset ao numero de dias que o utente ficou inativo (regressa a 0)
 	 */
-	void resetDiasAteExpirar();
+	void resetDiasInativo();
 
 	/**
-	 * Metodo que simula o avanco de um dia; atualiza o numero de dias que falta para o utente ser considerado inativo
+	 * Metodo que simula o avanco de um dia; atualiza o numero de dias que o utente ficou inativo
 	 */
 	void avancaDia();
 

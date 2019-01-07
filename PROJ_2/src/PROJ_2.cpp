@@ -387,12 +387,55 @@ int main(){
 	}while(!valid);
 
 
+	//----------------------
+
+	cout << endl;
+
+	char sndFileOp;
+
+	do{
+		cout << "Prentende carregar a informacao sobre os funcionarios, composicoes, e utentes inativos de algum ficheiro? (s -> sim; n -> nao)" << endl;
+		cin >> sndFileOp;
+
+		if(sndFileOp == 's'){ //a informacao vai ser extraida de um ficheiro
+
+			bool good_file;
+
+			do{
+
+				good_file = true;
+				string ficheiro;
+
+				cout << "indique o nome do ficheiro: ";
+				cin >> ficheiro;
+
+				if(pv.load_file2(ficheiro) != 0){
+					cout << "Houve problemas com a abertura deste ficheiro. Por favor escolha outro" << endl;
+					good_file = false;
+				}
+
+			}while(!good_file);
+
+		}
+		else if(sndFileOp == 'n'){ //nao ha informacao para ser extraida
+
+			cout << "Indique, entao, o seguinte:" << endl << endl;
+
+			pedeManutProx(); //pede o numero de dias maximos que deverao faltar para uma manutencao de uma composicao se considerar proxima
+			cout << endl << endl;
+
+			pedeNumDiasExpiracao(); //pede ao utilizador o numero de meses necessario sem comprar bilhete para um utente ser considerado inativo
+			cout << endl << endl;
+
+		}
+		else cout << "Essa operacao nao e valida." << endl;
+
+
+	}while((sndFileOp != 's') && (sndFileOp != 'n'));
+
+
 	cout << endl << endl;
 
-	//------------
-	pedeManutProx();
-	cout << endl << endl;
-	//------------
 
 	char sndOp;
 
@@ -424,9 +467,19 @@ int main(){
 /*-->*/ cout << "b -> adicionar uma nova composicao a base de dados" << endl;
 /*-->*/ cout << "e -> eliminar uma composicao da base de dados" << endl;
 /*-->*/ cout << "y -> imprimir toda a informacao relativa as composicoes do metro" << endl;
-/*-->*/ cout << "t -> simular o avanco de um dia, atualizando as composicoes" << endl;
 /*-->*/ cout << "v -> indicar que uma determinada composicao se avariou" << endl;
 /*-->*/ cout << "w -> modificar o numero de dias maximos que deverao faltar para uma manutencao de uma composicao se considerar proxima" << endl;
+
+		cout << endl;
+
+/*-->*/ cout << "1 -> imprimir a informacao de todos os clientes inativos da tabela" << endl;
+/*-->*/ cout << "2 -> dar reset ao numero de dias inativos de um determinado utente" << endl;
+/*-->*/ cout << "3 -> redefinir o numero de meses necessario sem comprar bilhetes assinatura, para que o utente fique inativo (atualiza a tabela)" << endl;
+/*-->*/ cout << "4 -> imprimir a informacao do grupo de utentes inativos, que se encontram inativos por mais de x meses" << endl;
+
+		cout << endl;
+		cout << "+ -> simular o avanco de um dia, atualizando as composicoes e os utentes e as suas estruturas relacionadas" << endl;
+		cout << "- -> simular o avanco de um mes (30 dias), atualizando as composicoes e os utentes e as suas estruturas relacionadas" << endl;
 
 		cout << endl << "s -> sair do programa" << endl;
 		cout << "Operacao: ";
@@ -997,15 +1050,6 @@ int main(){
 
 
 	//---------------
-	//escolheu-se a opcao de simulacao de avanco de um dia, atualizando as composicoes
-	}else if(sndOp == 't'){
-
-		pv.atualizaComp();
-
-		cout << endl << "---------" << endl << "Operacao efetuada com sucesso!" << endl << "---------" << endl;
-
-
-	//---------------
 	//escolheu-se a opcao de modificar o numero de dias para uma manutencao de uma composicao se considerar proxima
 	}else if(sndOp == 'w'){
 
@@ -1025,7 +1069,84 @@ int main(){
 
 
 	//---------------
-	//escolheu-se a operacao de sair do programa
+	//escolheu a opcao de imprimir a tabela com utentes inativos
+	}else if(sndOp == '1'){
+
+		pv.imprimeInfoInativos();
+		cout << endl << endl;
+
+
+	//---------------
+	//escolheu-se a opcao de dar reset ao numero de dias ate ser considerado inativo
+	}else if(sndOp == '2'){
+
+		int id;
+
+		cout << "Qual o id do funcionario? ";
+		cin >> id;
+
+		try{
+
+			pv.resetUtenteInativo(id);
+			cout << endl << "---------" << endl << "Operacao efetuada com sucesso!" << endl << "---------" << endl;
+
+		}catch(UtenteInexistente& ui){
+
+			cout << "Nao existe nenhum utente com id igual a " << ui.getId() << "!" << endl << endl;
+		}
+
+
+	//---------------
+	//escolheu-se a opcao de modificar o numero de meses necessario para que um utente fique inativo
+	}else if(sndOp == '3'){
+
+		pedeNumDiasExpiracao();
+		pv.removeUtentesInat(Utente::getNumDiasExpiracao());
+		cout << endl << "---------" << endl << "Operacao efetuada com sucesso!" << endl << "---------" << endl;
+
+	//---------------
+	//escolheu-se a opcao de imprimir a informacao do grupo de utentes inativos, que se encontram inativos por mais de x meses
+	}else if(sndOp == '4'){
+
+		int mes;
+		int numMesesMin = Utente::getNumDiasExpiracao() / 30;
+
+		do{
+
+			cout << endl << "Insira o numero de meses: ";
+			cin >> mes;
+
+			if(mes < numMesesMin)
+				cout << "O numero de meses precisa de ser maior ou igual que o numero de meses minimo para um utente ficar inativo (" << numMesesMin << ")." << endl << endl;
+
+
+		}while(mes < numMesesMin);
+
+
+		pv.imprimeInfoInativosMes(mes);
+
+
+	//---------------
+	//escolheu-se a opcao de avanco de um dia
+	}else if(sndOp == '+'){
+
+		pv.avancaDiaTudo();
+		cout << endl << endl;
+		cout << "O sistema foi avancado em um dia!";
+		cout << endl << endl;
+
+
+	//---------------
+	//escolheu-se a opcao de avanco de um mes
+	}else if(sndOp == '-'){
+
+		pv.avancaMesTudo();
+		cout << endl << endl;
+		cout << "O sistema foi avancado em um mes!";
+		cout << endl << endl;
+
+
+
 	}else if(sndOp != 's'){
 
 			cout << "Operacao invalida." << endl << endl;
@@ -1044,32 +1165,52 @@ int main(){
 
 		validExit = false;
 		cout << endl << endl;
-		cout << "Pretende guardar a informacao modificada dos pontos de venda num ficheiro?" << endl;
+		cout << "Pretende guardar a informacao modificada em ficheiros?" << endl;
 		cout << "s -> guardar" << endl << "n -> nao guardar" << endl;
 		cout << "Operacao: ";
 		cin >> trdOp;
 
-		//o utilizador pretende gravar a informacao num ficheiro
+		//o utilizador pretende gravar a informacao em ficheiros
 		if(trdOp == 's'){
 
-			bool good_saveFile;
-			string ficheiro;
+			bool good_saveFile1, good_saveFile2;
+			string ficheiro1, ficheiro2;
 
 			do{
 
-				good_saveFile = true;
-				cout << endl << "Qual o nome do ficheiro? ";
-				cin >> ficheiro;
+				good_saveFile1 = true;
+				cout << endl << "Qual o nome do primeiro ficheiro? ";
+				cin >> ficheiro1;
 
-			//grava a informacao no ficheiro de nome especificado
-			if(pv.save_file(ficheiro) != 0){
+				//grava a informacao no ficheiro de nome especificado
+				if(pv.save_file(ficheiro1) != 0){
 
-				cout << "Ocorreu um erro com um ficheiro. Por favor tente novamente.";
-				good_saveFile = false;
-			}
+					cout << "Ocorreu um erro com um ficheiro. Por favor tente novamente.";
+					good_saveFile1 = false;
+				}
 
 
-			}while(! good_saveFile);
+			}while(!good_saveFile1);
+
+
+			cout << endl;
+
+			do{
+
+				good_saveFile2 = true;
+				cout << endl << "Qual o nome do segundo ficheiro? ";
+				cin >> ficheiro2;
+
+				//grava a informacao no ficheiro de nome especificado
+				if(pv.save_file2(ficheiro2) != 0){
+
+					cout << "Ocorreu um erro com um ficheiro. Por favor tente novamente.";
+					good_saveFile2 = false;
+				}
+
+
+			}while(!good_saveFile2);
+
 
 			validExit = true;
 

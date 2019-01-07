@@ -44,14 +44,14 @@ string replaceSpacesWithUnderscores(string s){
 
 ostream& operator<<(ostream &os, const UtenteSenior&u){
 
-	os << replaceSpacesWithUnderscores(u.nome) << endl << u.id << endl << u.diasAteExpirar << endl << u.idade << endl << u.cc;
+	os << replaceSpacesWithUnderscores(u.nome) << endl << u.id << endl << u.diasInativo << endl << u.idade << endl << u.cc;
 	return os;
 
 }
 
 ostream& operator<<(ostream &os, const UtenteJunior&u){
 
-	os << replaceSpacesWithUnderscores(u.nome) << endl << u.id << endl << u.diasAteExpirar << endl << u.idade << endl << u.cc;
+	os << replaceSpacesWithUnderscores(u.nome) << endl << u.id << endl << u.diasInativo << endl << u.idade << endl << u.cc;
 	return os;
 
 }
@@ -59,7 +59,7 @@ ostream& operator<<(ostream &os, const UtenteJunior&u){
 
 ostream& operator<<(ostream &os, const UtenteEstudante&u){
 
-	os << replaceSpacesWithUnderscores(u.nome) << endl << u.id << endl << u.diasAteExpirar << endl << u.idade << endl << u.cc << endl << replaceSpacesWithUnderscores(u.escola);
+	os << replaceSpacesWithUnderscores(u.nome) << endl << u.id << endl << u.diasInativo << endl << u.idade << endl << u.cc << endl << replaceSpacesWithUnderscores(u.escola);
 	return os;
 
 }
@@ -67,7 +67,7 @@ ostream& operator<<(ostream &os, const UtenteEstudante&u){
 
 ostream& operator<<(ostream &os, const Utente&u){
 
-	os << replaceSpacesWithUnderscores(u.nome) << endl << u.id << endl << u.diasAteExpirar;
+	os << replaceSpacesWithUnderscores(u.nome) << endl << u.id << endl << u.diasInativo;
 	return os;
 
 }
@@ -84,12 +84,12 @@ void Utente::setNextId(unsigned int valor){
 
 
 void Utente::avancaDia(){
-	diasAteExpirar--;
+	diasInativo++;
 }
 
 
-void Utente::resetDiasAteExpirar(){
-	diasAteExpirar = numDiasExpiracao;
+void Utente::resetDiasInativo(){
+	diasInativo = 0;
 }
 
 
@@ -97,7 +97,7 @@ void Utente::imprimeInfoUtente() const{
 
 	cout << "ID: " << id << endl;
 	cout << "Nome: " << nome << endl;
-	cout << "Num dias ate expirar: " << diasAteExpirar;
+	cout << "Num dias inativo: " << diasInativo;
 }
 
 
@@ -114,9 +114,9 @@ unsigned int Utente::getId() const{
 }
 
 
-int Utente::getDiasAteExpirar() const{
+int Utente::getDiasInativo() const{
 
-	return diasAteExpirar;
+	return diasInativo;
 }
 
 
@@ -145,7 +145,7 @@ void UtenteEstudante::imprimeInfoUtente() const{
 
 	cout << "ID: " << id << endl;
 	cout << "Nome: " << nome << endl;
-	cout << "Num dias ate expirar: " << diasAteExpirar << endl;
+	cout << "Num dias inativo: " << diasInativo << endl;
 	cout << "Idade: " << idade << endl;
 	cout << "CC: " << cc << endl;
 	cout << "Escola: " << escola;
@@ -168,7 +168,7 @@ void UtenteSenior::imprimeInfoUtente() const{
 
 	cout << "ID: " << id << endl;
 	cout << "Nome: " << nome << endl;
-	cout << "Num dias ate expirar: " << diasAteExpirar << endl;
+	cout << "Num dias inativo: " << diasInativo << endl;
 	cout << "Idade: " << idade << endl;
 	cout << "CC: " << cc;
 }
@@ -192,7 +192,7 @@ void UtenteJunior::imprimeInfoUtente() const{
 
 	cout << "ID: " << id << endl;
 	cout << "Nome: " << nome << endl;
-	cout << "Num dias ate expirar: " << diasAteExpirar << endl;
+	cout << "Num dias inativo: " << diasInativo << endl;
 	cout << "Idade: " << idade << endl;
 	cout << "CC: " << cc;
 }

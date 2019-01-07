@@ -230,7 +230,7 @@ int PontosVenda::load_file(string ficheiro){
 
 						f >> id; //extrai o id do utente
 
-						f >> numDias; //extrai o numero de dias ate ficar inativo
+						f >> numDias; //extrai o numero de dias inativo
 
 
 						Utente* u = getUtente(id); //verifica se o utente ja existe
@@ -544,7 +544,7 @@ bool PontosVenda::comprarBilheteAssinatura(string local, BilheteAssinatura& ba){
 
 					eliminaUtenteInat(u->getId()); //se ele estiver na tabela de dispersao, e eliminado
 
-					u->resetDiasAteExpirar(); //da reset ao numero de dias que o utente tem ate ser considerado inativo
+					u->resetDiasInativo(); //da reset ao numero de dias que o utente ficou inativo
 
 				}
 				else{ //se o utente e novo, ou seja, ainda nao esta presente no vetor de utentes
@@ -774,16 +774,6 @@ void PontosVenda::addPDV(string local, bool loja){
 
 
 void PontosVenda::addUtente(Utente* u){
-
-	/*for(unsigned i = 0; i < utentes.size(); i++){
-
-		if(utentes.at(i)->getId() == u->getId())	//nao deixa haver dois utentes com o mesmo id!!
-			throw UtenteRepetido(u->getId());
-
-	}
-
-	utentes.push_back(u);*/
-
 
 	for(unsigned i = 0; i < utentes.size(); i++){
 
@@ -1028,7 +1018,7 @@ bool PontosVenda::setFuncPtVenda(string nome, unsigned salario, string pt_venda)
 
 void PontosVenda::imprimeInfoComposicoes() const{
 
-	cout << "Num de dias de uma manutencao proxima: " << Composicao::getManutProxima() << endl;
+	cout << "Num maximo de dias para se considerar uma manutencao como proxima: " << Composicao::getManutProxima() << endl;
 
 	priority_queue<Composicao> buffer = composicoes;
 
@@ -1160,8 +1150,8 @@ void PontosVenda::atualizaComp(){
 
 //----------UTENTES INATIVOS------------
 
-void PontosVenda::adicionaUtenteInat(Utente* u){
-	utentesInativos.insert(u); //se ja se encontrar na tabela um utente com o mesmo id, nao faz nada
+bool PontosVenda::adicionaUtenteInat(Utente* u){
+	return utentesInativos.insert(u).second; //se ja se encontrar na tabela um utente com o mesmo id, nao faz nada
 }
 
 void PontosVenda::eliminaUtenteInat(unsigned id){
@@ -1186,23 +1176,267 @@ void PontosVenda::eliminaUtenteInat(unsigned id){
 
 void PontosVenda::atualizaInat(){
 
+	//apenas precisa de avancar o dia para os utentes do vetor, pois como estamos a utilizar pointers, na tabela este tambem irao
+	//ser atualizados.
 	for(unsigned i = 0; i < utentes.size(); i++){
 
-		if(utentes[i]->getDiasAteExpirar() > 0)
-			utentes[i]->avancaDia();
-		if(utentes[i]->getDiasAteExpirar() == 0)
-			adicionaUtenteInat(utentes[i]);
+		utentes[i]->avancaDia(); //avanca o dia para todos os utentes
+
+		if(utentes[i]->getDiasInativo() > Utente::getNumDiasExpiracao()){ //prazo para o utente "expirou"; e inativo
+
+			if(adicionaUtenteInat(utentes[i])) //se retornar true, entao o utente nao estava presente na tabela, e foi adicionado
+				cout << "O utente de id " << utentes[i]->getId() << " foi adicionado à tabela de utentes inativos!" << endl << endl;
+		}
 	}
 }
 
 
 void PontosVenda::imprimeInfoInativos(){
 
-	cout << "LISTA DE UTENTES INATIVOS: " << endl << endl;
+	cout << "LISTA DE UTENTES INATIVOS: " << endl;
 	tabDispUtentesInat::iterator it = utentesInativos.begin();
+	if(it == utentesInativos.end())
+		cout << "Nao existe informacao sobre utentes inativos!" << endl << endl;
+
 	while(it != utentesInativos.end()){
 		(*it)->imprimeInfoUtente();
 		cout << endl << endl;
 		it++;
 	}
+	cout <<"////////////////" << endl << endl;
+}
+
+
+void PontosVenda::imprimeInfoInativosMes(int mes){
+
+	int numDias = mes * 30;
+
+	tabDispUtentesInat::iterator itr = utentesInativos.begin();
+	tabDispUtentesInat::iterator itre = utentesInativos.end();
+
+	bool existem = false; //ira indicar se existem ou nao utentes inativos por mais de x meses
+
+	while(itr != itre){
+
+		if((*itr)->getDiasInativo() >= numDias){
+
+			existem = true;
+			(*itr)->imprimeInfoUtente();
+			cout << endl << endl;
+		}
+
+		itr++;
+	}
+
+	//se nao existirem
+	if(!existem)
+		cout << "Nao existem utentes inativos por mais de " << mes << " mes(es)!" << endl << endl;
+
+	cout <<"////////////////" << endl << endl;
+}
+
+
+
+void PontosVenda::resetUtenteInativo(unsigned id){
+
+	Utente* ut = getUtente(id);
+
+	//se nao existir nenhum utente com o id especificado
+	if(ut == 0)
+		throw UtenteInexistente(id);
+
+	eliminaUtenteInat(id); //elimina-o da tabela, se este estiver la presente
+
+	ut->resetDiasInativo(); //da reset ao numero de dias inativo
+
+}
+
+
+void PontosVenda::removeUtentesInat(unsigned dias){
+
+	tabDispUtentesInat::iterator itr = utentesInativos.begin();
+	tabDispUtentesInat::iterator itre = utentesInativos.end();
+
+	while(itr != itre){
+
+		if((*itr)->getDiasInativo() < dias){ //numero de dias e menor; remover da tabela
+
+			eliminaUtenteInat((*itr)->getId());
+		}
+
+		itr++;
+	}
+
+}
+
+
+
+//----------GERAL------------
+
+void PontosVenda::avancaDiaTudo(){
+
+	atualizaInat(); //avanca dia e atualiza os utentes
+	atualizaComp(); //avanca dia e atualiza as composicoes
+}
+
+
+
+void PontosVenda::avancaMesTudo(){
+
+	for(unsigned i = 1; i <= 30; i++)
+		avancaDiaTudo(); //avanca 30 dias
+}
+
+
+
+int PontosVenda::load_file2(string ficheiro){
+
+	ifstream f;
+	f.open(ficheiro);
+
+	if(!f.is_open()){	//nao conseguiu abrir o ficheiro
+		return 1;
+	}
+	int manutProx;
+	int diasExp;
+	int nextIdComp;
+
+	f >> manutProx; //ira indicar o numero maximo de dias para se considerar uma manutencao como proxima
+	f >> diasExp; //ira indicar o numero maximo de dias que um utente pode ficar sem comprar bilhetes assinatura, sem ser considerado como inativo
+	f >> nextIdComp; //ultimo id utilizado para as composicoes
+	Composicao::setManutProxima(manutProx);
+	Utente::setNumDiasExpiracao(diasExp);
+	Composicao::setCompNextId(nextIdComp);
+
+	string linha;
+
+	f >> linha;
+
+	//informacao sobre funcionarios
+	while(linha != "*****"){
+
+		string nome = replaceUnderscoresWithSpaces(linha);
+		f >> linha;
+		unsigned int salario = stoi(linha);
+		f >> linha;
+		string funcao = replaceUnderscoresWithSpaces(linha);
+		f >> linha;
+		string ptVenda = replaceUnderscoresWithSpaces(linha);
+
+		Funcionario func(nome, salario, funcao, ptVenda);
+		this->insertFuncionario(func);
+
+		f >> linha; //comeca a retirar info sobre o proximo funcionario (se existir)
+	}
+
+	f >> linha;
+
+	//informacao sobre as composicoes
+	while(linha != "*****"){
+
+		int id = stoi(linha);
+		f >> linha;
+
+		bool avaria;
+
+		if(linha == "sim")
+			avaria = true;
+		else avaria = false;
+
+		f >> linha;
+		int proxManut = stoi(linha);
+
+		Composicao c(proxManut, avaria, id);
+		this->adicionaComposicao(c);
+
+		f >> linha; //comeca a retirar info sobre a proxima composicao (se existir)
+	}
+
+	f >> linha;
+
+	//informacao sobre os utentes inativos
+	while(linha != "*****"){
+
+		int id = stoi(linha);
+		Utente* u = getUtente(id); //tenta aceder ao utente com o id especificado
+
+		if(u)
+			adicionaUtenteInat(u);
+
+
+		f >> linha; //comeca a retirar info sobre o proximo utente inativo (se existir)
+	}
+
+	f.close();
+	return 0;
+}
+
+
+
+int PontosVenda::save_file2(string ficheiro){
+
+	ofstream f;
+	f.open(ficheiro, ofstream::out | ofstream::trunc); //apaga o conteudo do ficheiro, se existir
+
+	if(!f.is_open()){	//nao conseguiu abrir o ficheiro
+		cerr << "Nao foi possivel abrir o ficheiro!";
+		return 1;
+	}
+
+	f << Composicao::getManutProxima() << endl;
+	f << Utente::getNumDiasExpiracao() << endl;
+	f << Composicao::getCompNextId() << endl;
+
+
+	set<Funcionario>::iterator itr = funcionarios.begin();
+	set<Funcionario>::iterator itre = funcionarios.end();
+
+	//informacao sobre os funcionarios
+	while(itr != itre){
+
+		f << replaceSpacesWithUnderscores(itr->getNome()) << endl;
+		f << itr->getSalario() << endl;
+		f << replaceSpacesWithUnderscores(itr->getFuncao()) << endl;
+		f << replaceSpacesWithUnderscores(itr->getPtVenda()) << endl;
+
+
+		itr++;
+	}
+
+	f << "*****" << endl;
+
+	priority_queue<Composicao> tempComp;
+
+	while(!composicoes.empty()){
+		f << composicoes.top().getID() << endl;
+
+		if(composicoes.top().getAvaria())
+			f << "sim" << endl;
+		else f << "nao" << endl;
+
+		f << composicoes.top().getProxManut() << endl;
+
+		tempComp.push(composicoes.top());
+		composicoes.pop();
+	}
+
+	composicoes = tempComp;
+
+	f << "*****" << endl;
+
+	tabDispUtentesInat::iterator itrHash = utentesInativos.begin();
+	tabDispUtentesInat::iterator itreHash = utentesInativos.end();
+
+	while(itrHash != itreHash){
+		Utente* atual = (*itrHash);
+
+		f << atual->getId() << endl;
+
+		itrHash++;
+	}
+
+	f << "*****" << endl;
+
+	f.close();
+	return 0;
 }
