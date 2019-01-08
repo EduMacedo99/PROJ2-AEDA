@@ -468,7 +468,7 @@ int main(){
 /*-->*/ cout << "e -> eliminar uma composicao da base de dados" << endl;
 /*-->*/ cout << "y -> imprimir toda a informacao relativa as composicoes do metro" << endl;
 /*-->*/ cout << "v -> indicar que uma determinada composicao se avariou" << endl;
-/*-->*/ cout << "w -> modificar o numero de dias maximos que deverao faltar para uma manutencao de uma composicao se considerar proxima" << endl;
+/*-->*/ cout << "w -> modificar o numero de dias maximo que deverao faltar para uma manutencao de uma composicao se considerar proxima" << endl;
 
 		cout << endl;
 
