@@ -475,7 +475,7 @@ int main(){
 /*-->*/ cout << "1 -> imprimir a informacao de todos os clientes inativos da tabela" << endl;
 /*-->*/ cout << "2 -> dar reset ao numero de dias inativos de um determinado utente" << endl;
 /*-->*/ cout << "3 -> redefinir o numero de meses necessario sem comprar bilhetes assinatura, para que o utente fique inativo (atualiza a tabela)" << endl;
-/*-->*/ cout << "4 -> imprimir a informacao do grupo de utentes inativos, que se encontram inativos por mais de x meses" << endl;
+/*-->*/ cout << "4 -> imprimir a informacao do grupo de utentes inativos, que nao efetuam compras por mais de x meses" << endl;
 
 		cout << endl;
 		cout << "+ -> simular o avanco de um dia, atualizando as composicoes e os utentes e as suas estruturas relacionadas" << endl;
@@ -1105,7 +1105,7 @@ int main(){
 		cout << endl << "---------" << endl << "Operacao efetuada com sucesso!" << endl << "---------" << endl;
 
 	//---------------
-	//escolheu-se a opcao de imprimir a informacao do grupo de utentes inativos, que se encontram inativos por mais de x meses
+	//escolheu-se a opcao de imprimir a informacao do grupo de utentes inativos, que se nao efetuam compras por mais de x meses
 	}else if(sndOp == '4'){
 
 		int mes;
