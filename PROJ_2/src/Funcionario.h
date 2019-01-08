@@ -5,11 +5,6 @@
 
 using namespace std;
 
-//NUNO
-//USAR SETS
-//DEFINIR OPERADOR <
-//O SET FICA NA CLASSE PONTOS DE VENDA, OU NUMA CLASSE COM A INFORMACAO NOVA
-//MEMBRO COM STRING DO LOCAL DO PONTO DE VENDA
 
 /**
  * Classe que representa os funcionarios que trabalham nos pontos de venda do metro

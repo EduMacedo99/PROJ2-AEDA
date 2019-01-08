@@ -1,10 +1,6 @@
 #ifndef COMPOSICAO_H_
 #define COMPOSICAO_H_
 
-//EDUARDO RIBEIRO
-//DEFINIR OPERADOR <
-
-
 #include <iostream>
 #include <string>
 #include <vector>

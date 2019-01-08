@@ -1,5 +1,5 @@
 #include "Composicao.h"
-//FAZER MAIS INCLUDES
+
 using namespace std;
 
 int Composicao::manutProxima;
